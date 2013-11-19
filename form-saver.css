@@ -9,12 +9,12 @@
 
  * ============================================================= */
 
-.hide-no-local-storage {
+.hide-no-js {
 	display: none;
 	visibility: hidden;
 }
 
-.local-storage .hide-no-local-storage {
+.js .hide-no-js {
 	display: block;
 	visibility: visible;
 }

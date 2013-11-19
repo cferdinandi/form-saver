@@ -13,7 +13,7 @@
 
 	'use strict';
 
-	if ( window.localStorage ) {
+	if ( 'querySelector' in document && 'addEventListener' in window && window.localStorage ) {
 
 		// Variables
 		var formSave = document.querySelectorAll('.form-save-data');
@@ -26,25 +26,25 @@
 		// Setup save text input, textarea, and select options
 		var saveFormFieldText = function (field) {
 			if ( field.value !== null && field.value !== '' && !buoy.hasClass(field, 'form-no-save') ) {
-				localStorage.setItem(field.name, field.value);
+				localStorage.setItem('formsaver-' + field.name, field.value);
 			}
 		};
 
 		// Setup save radio buttons
 		var saveFormFieldRadioCheckbox = function (field) {
 			if ( field.checked === true && !buoy.hasClass(field, 'form-no-save' ) ) {
-				localStorage.setItem(field.name + field.value, 'on');
+				localStorage.setItem('formsaver-' + field.name + field.value, 'on');
 			}
 		};
 
 		// Setup get form data
 		var getFormFieldData = function (field) {
-			localStorage.getItem(field);
+			localStorage.getItem('formsaver-' + field);
 		};
 
 		// Setup delete form data function
 		var deleteFormFieldData = function (field) {
-			localStorage.removeItem(field);
+			localStorage.removeItem('formsaver-' + field);
 		};
 
 		// Save form data
@@ -55,12 +55,10 @@
 
 				// Save fields
 				[].forEach.call(formFieldInput, function (field) {
-					if (  field.name != 'terms[]' && field.name != 'applied-before' ) {
-						if ( field.type == 'radio' || field.type == 'checkbox' ) {
-							saveFormFieldRadioCheckbox(field);
-						} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-							saveFormFieldText(field);
-						}
+					if ( field.type == 'radio' || field.type == 'checkbox' ) {
+						saveFormFieldRadioCheckbox(field);
+					} else if ( field.type != 'hidden' && field.type != 'submit' ) {
+						saveFormFieldText(field);
 					}
 				});
 
@@ -91,12 +89,10 @@
 				e.preventDefault();
 
 				[].forEach.call(formFieldInput, function (field) {
-					if ( field.name != 'terms[]' ) {
-						if ( field.type == 'radio' || field.type == 'checkbox' ) {
-							deleteFormFieldData(field.name + field.value);
-						} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-							deleteFormFieldData(field.name);
-						}
+					if ( field.type == 'radio' || field.type == 'checkbox' ) {
+						deleteFormFieldData(field.name + field.value);
+					} else if ( field.type != 'hidden' && field.type != 'submit' ) {
+						deleteFormFieldData(field.name);
 					}
 				});
 
@@ -132,18 +128,18 @@
 		// Get form data on page load
 		[].forEach.call(formFieldInput, function (field) {
 			if ( field.type == 'radio' || field.type == 'checkbox' ) {
-				if ( localStorage.getItem(field.name + field.value) == 'on' ) {
+				if ( localStorage.getItem('formsaver-' + field.name + field.value) == 'on' ) {
 					field.checked = true;
 				}
 			} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-				field.value = localStorage.getItem(field.name);
+				field.value = localStorage.getItem('formsaver-' + field.name);
 			}
 		});
 		[].forEach.call(formFieldTextarea, function (field) {
-			field.value = localStorage.getItem(field.name);
+			field.value = localStorage.getItem('formsaver-' + field.name);
 		});
 		[].forEach.call(formFieldSelect, function (field) {
-			field.value = localStorage.getItem(field.name);
+			field.value = localStorage.getItem('formsaver-' + field.name);
 		});
 
 		// If page was reloaded and delete success message exists, display it

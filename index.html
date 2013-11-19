@@ -36,8 +36,8 @@
 
 	<!-- Add '.local-storage' class to the <html> element -->
 	<script>
-		if ( 'localStorage' in window ) {
-			document.documentElement.className += ' local-storage';
+		if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window ) {
+			document.documentElement.className += ' js';
 		}
 	</script>
 </head>

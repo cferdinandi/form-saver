@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Form Saver</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- A basic responsive reset -->
+	<style>
+		@-webkit-viewport { width: device-width; zoom: 1.0; }
+		   @-moz-viewport { width: device-width; zoom: 1.0; }
+			@-ms-viewport { width: device-width; zoom: 1.0; }
+			 @-o-viewport { width: device-width; zoom: 1.0; }
+				@viewport { width: device-width; zoom: 1.0; }
+
+		html { overflow-y: auto; }
+
+		img, audio, video, canvas { max-width: 100%; }
+
+		/*  Sets Body Width */
+		.container {
+			max-width: 40em;
+			width: 88%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+
+	<!-- stylesheets -->
+	<link rel="stylesheet" href="form-saver.css" type="text/css">
+
+	<!-- HTML5 Shim for IE -->
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Add '.local-storage' class to the <html> element -->
+	<script>
+		if ( 'localStorage' in window ) {
+			document.documentElement.className += ' local-storage';
+		}
+	</script>
+</head>
+
+<body>
+	<section class="container">
+
+		<h1 style="text-align: center; font-size: 3em;">Form Saver</h1>
+		<p style="text-align: center; font-size: 1.5em;">A simple script that lets users save and reuse form data.</p>
+
+		<form>
+			<div>
+				<label>Text Input</label>
+				<input name="input" type="text">
+			</div>
+
+			<div>
+				<label>Text Input to Ignore</label>
+				<input name="input-ignore" class="form-no-save" type="text">
+			</div>
+
+			<div>
+				<label>
+				<input type="checkbox" name="checkbox1" value="1">
+					Checkbox 1
+				</label>
+			</div>
+
+			<div>
+				<label>
+				<input type="checkbox" name="checkbox2" value="2">
+					Checkbox 2
+				</label>
+			</div>
+
+			<div>
+				<label>
+				<input type="radio" name="radioset" value="radio1">
+					Radio 1
+				</label>
+			</div>
+
+			<div>
+				<label>
+				<input type="radio" name="radioset" value="radio2">
+					Radio 2
+				</label>
+			</div>
+
+			<div>
+				<select name="select">
+					<option>Select 1</option>
+					<option>Select 2</option>
+					<option>Select 3</option>
+				</select>
+			</div>
+
+			<div>
+				<textarea name="textarea"></textarea>
+			</div>
+
+			<div class="hide-no-local-storage">
+				<div class="form-status"></div>
+				<div>
+					<button class="form-save-data" data-message="You did it. Booya!">Save Form Data</button> <button class="form-delete-data" data-message="Your form data was deleted." data-clear="true">Delete Form Data</button>
+				</div>
+			</div>
+		</form>
+
+	</section>
+
+
+	<!-- Javascript -->
+	<script src="buoy.js"></script>
+	<script src="form-saver.js"></script>
+
+</body>
+</html>

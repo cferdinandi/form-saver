@@ -62,7 +62,7 @@
 
 				// If no form ID is provided, generate friendly console message encouraging one to be added
 				if ( form.id === null || form.id === '' ) {
-					console.log('FORM SAVER WARNING: This form has no ID attribute. This can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash values.');
+					console.log('FORM SAVER WARNING: This form has no ID attribute. This can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.');
 				}
 
 			}, false);

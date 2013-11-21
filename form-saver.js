@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v2.0
+	Form Saver v2.1
 	A simple script that lets users save and reuse form data.
 	http://gomakethings.com
 
@@ -13,7 +13,7 @@
 
 	'use strict';
 
-	if ( 'querySelector' in document && 'addEventListener' in window && window.localStorage ) {
+	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
 
 		// Variables
 		var forms = document.forms;

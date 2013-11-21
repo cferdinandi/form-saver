@@ -28,7 +28,7 @@
 
 				// Variables
 				var form = save.form;
-				var formSaverID = form.id === null || form.id === '' ? 'formsaver-anonymous' : 'formsaver-' + form.id;
+				var formSaverID = form.id === null || form.id === '' ? 'formsaver-' + document.URL : 'formsaver-' + form.id;
 				var formSaverData = {};
 				var formFields = form.elements;
 				var formStatus = form.querySelectorAll('.form-status');
@@ -60,6 +60,11 @@
 				// Save form data in localStorage
 				localStorage.setItem( formSaverID, JSON.stringify(formSaverData) );
 
+				// If no form ID is provided, generate friendly console message encouraging one to be added
+				if ( form.id === null || form.id === '' ) {
+					console.log('FORM SAVER WARNING: This form has no ID attribute. This can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash values.');
+				}
+
 			}, false);
 		});
 
@@ -71,7 +76,7 @@
 
 				// Variables
 				var form = remove.form;
-				var formSaverID = form.id === null || form.id === '' ? 'formsaver-anonymous' : 'formsaver-' + form.id;
+				var formSaverID = form.id === null || form.id === '' ? 'formsaver-' + document.URL : 'formsaver-' + form.id;
 				var formStatus = form.querySelectorAll('.form-status');
 				var formMessage = remove.getAttribute('data-message') === null ? '<div>Deleted!</div>' : '<div>' + remove.getAttribute('data-message') + '</div>';
 
@@ -95,7 +100,7 @@
 		[].forEach.call(forms, function (form) {
 
 			// Variables
-			var formSaverID = form.id === null || form.id === '' ? 'formsaver-anonymous' : 'formsaver-' + form.id;
+			var formSaverID = form.id === null || form.id === '' ? 'formsaver-' + document.URL : 'formsaver-' + form.id;
 			var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 			var formFields = form.elements;
 			var formStatus = form.querySelectorAll('.form-status');

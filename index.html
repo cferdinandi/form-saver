@@ -27,7 +27,7 @@
 	</style>
 
 	<!-- stylesheets -->
-	<link rel="stylesheet" href="form-saver.css" type="text/css">
+	<link rel="stylesheet" href="css/form-saver-css.css" type="text/css">
 
 	<!-- HTML5 Shim for IE -->
 	<!--[if IE]>
@@ -36,7 +36,7 @@
 
 	<!-- Add '.local-storage' class to the <html> element -->
 	<script>
-		if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window ) {
+		if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
 			document.documentElement.className += ' js';
 		}
 	</script>
@@ -111,8 +111,8 @@
 
 
 	<!-- Javascript -->
-	<script src="buoy.js"></script>
-	<script src="form-saver.js"></script>
+	<script src="js/buoy.js"></script>
+	<script src="js/form-saver.js"></script>
 
 </body>
 </html>

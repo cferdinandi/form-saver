@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v2.1
+	Form Saver v2.2
 	A simple script that lets users save and reuse form data.
 	http://gomakethings.com
 

@@ -1,0 +1,20 @@
+/* =============================================================
+
+	Form Saver v2.2
+	A simple script that lets users save and reuse form data.
+	http://gomakethings.com
+
+	Free to use under the MIT License.
+	http://gomakethings.com/mit/
+
+ * ============================================================= */
+
+.hide-no-js {
+	display: none;
+	visibility: hidden;
+}
+
+.js .hide-no-js {
+	display: block;
+	visibility: visible;
+}

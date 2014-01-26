@@ -15,7 +15,7 @@
 
  * ============================================================= */
 
-window.buoy = (function(){
+window.buoy = (function (window, document, undefined) {
 
 	'use strict';
 
@@ -89,4 +89,4 @@ window.buoy = (function(){
 		getSiblings: getSiblings
 	};
 
-})();
+})(window, document);

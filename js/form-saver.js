@@ -33,14 +33,14 @@
 			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
 			var formSaveBtnrData = {};
 			var formFields = form.elements;
-			var formStatus = form.querySelectorAll('.form-status');
+			var formStatus = form.querySelectorAll('[data-form-status]');
 
 
 			// METHODS
 
 			// Convert field data into an array
 			var prepareField = function (field) {
-				if ( !buoy.hasClass(field, 'form-no-save') ) {
+				if ( !field.hasAttribute('data-form-no-save') ) {
 					if ( field.type == 'radio' || field.type == 'checkbox' ) {
 						if ( field.checked === true ) {
 							formSaveBtnrData[field.name + field.value] = 'on';
@@ -92,7 +92,7 @@
 
 			var form = btn.form;
 			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
-			var formStatus = form.querySelectorAll('.form-status');
+			var formStatus = form.querySelectorAll('[data-form-status]');
 			var formMessage = btn.getAttribute('data-message') === null ? '<div>Deleted!</div>' : '<div>' + btn.getAttribute('data-message') + '</div>';
 
 
@@ -128,7 +128,7 @@
 			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
 			var formSaveBtnrData = JSON.parse( localStorage.getItem(formSaveBtnrID) );
 			var formFields = form.elements;
-			var formStatus = form.querySelectorAll('.form-status');
+			var formStatus = form.querySelectorAll('[data-form-status]');
 
 
 			// METHODS

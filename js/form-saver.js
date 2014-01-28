@@ -13,7 +13,8 @@ window.formSaveBtnr = (function (window, document, undefined) {
 
 	'use strict';
 
-	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
+	// Feature test
+	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window ) {
 
 		// SELECTORS
 

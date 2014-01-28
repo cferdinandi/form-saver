@@ -13,7 +13,7 @@
   visibility: hidden;
 }
 
-.js .form-saver {
+.js-form-saver .form-saver {
   display: block;
   visibility: visible;
 }

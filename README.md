@@ -5,6 +5,9 @@ A simple script that lets users save and reuse form data.
 Getting started with Form Saver is really easy. [View the online tutorial](http://cferdinandi.github.io/form-saver/) or dig through the `index.html` file.
 
 ## Changelog
+* v3.1 (January 27, 2014)
+  * Updated `addEventListener` to be more object oriented.
+  * Moved feature test to script itself.
 * v3.0 (January 27, 2014)
   * Switched to a data attribute for the toggle selector (separates scripts from styles).
   * Removed unneeded `.save-form-data` and `.delete-form-data` classes.

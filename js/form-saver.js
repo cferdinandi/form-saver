@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v3.0
+	Form Saver v3.1
 	A simple script that lets users save and reuse form data.
 	http://gomakethings.com
 
@@ -9,7 +9,7 @@
 
  * ============================================================= */
 
-;window.formSaveBtnr = (function (window, document, undefined) {
+window.formSaveBtnr = (function (window, document, undefined) {
 
 	'use strict';
 
@@ -19,16 +19,33 @@
 
 		var forms = document.forms;
 		var formSaveBtn = document.querySelectorAll('[data-form-save]');
-		var formRemoveBtn = document.querySelectorAll('[data-form-delete]');
+		var formDeleteBtn = document.querySelectorAll('[data-form-delete]');
 
 
 		// METHODS
 
+		// Event listener loop
+		var runListenerLoop = function ( items, type, listener ) {
+			for (var i = items.length; i--;) {
+				var item = items[i];
+				item.addEventListener(type, listener, false);
+			}
+		};
+
+		// For loop
+		var runMethodLoop = function ( items, method ) {
+			for (var i = items.length; i--;) {
+				var item = items[i];
+				method(item);
+			}
+		};
+
 		// Save form data to localStorage
-		var saveForm = function (btn) {
+		var saveForm = function (event) {
 
 			// SELECTORS
 
+			var btn = this;
 			var form = btn.form;
 			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
 			var formSaveBtnrData = {};
@@ -65,18 +82,10 @@
 
 			// EVENTS, LISTENERS, AND INITS
 
-			// Add field data to array
-			[].forEach.call(formFields, function (field) {
-				prepareField(field);
-			});
-
-			// Display save success message
-			[].forEach.call(formStatus, function (status) {
-				displayStatus(status);
-			});
-
-			// Save form data in localStorage
-			localStorage.setItem( formSaveBtnrID, JSON.stringify(formSaveBtnrData) );
+			event.preventDefault();
+			runMethodLoop( formFields, prepareField ); // Add field data to array
+			runMethodLoop( formStatus, displayStatus ); // Display save success message
+			localStorage.setItem( formSaveBtnrID, JSON.stringify(formSaveBtnrData) ); // Save form data in localStorage
 
 			// If no form ID is provided, generate friendly console message encouraging one to be added
 			if ( form.id === null || form.id === '' ) {
@@ -86,10 +95,11 @@
 		};
 
 		// Remove form data from localStorage
-		var deleteForm = function (btn) {
+		var deleteForm = function (event) {
 
 			// SELECTORS
 
+			var btn = this;
 			var form = btn.form;
 			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
 			var formStatus = form.querySelectorAll('[data-form-status]');
@@ -103,20 +113,19 @@
 					sessionStorage.setItem(formSaveBtnrID + '-formSaveBtnrMessage', formMessage);
 					location.reload(false);
 				} else {
-					[].forEach.call(formStatus, function (status) {
+					for (var i = formStatus.length; i--;) {
+						var status = formStatus[i];
 						status.innerHTML = formMessage;
-					});
+					}
 				}
 			};
 
 
 			// EVENTS, LISTENERS, AND INITS
 
-			// Remove form data
-			localStorage.removeItem(formSaveBtnrID);
-
-			// Display delete success message
-			displayStatus(btn);
+			event.preventDefault();
+			localStorage.removeItem(formSaveBtnrID); // Remove form data
+			displayStatus(btn); // Display delete success message
 
 		};
 
@@ -154,40 +163,21 @@
 
 			// EVENTS, LISTENERS, AND INITS
 
-			// Populate form with data from localStorage
-			[].forEach.call(formFields, function (field) {
-				populateField(field);
-			});
-
-			// If page was reloaded and delete success message exists, display it
-			[].forEach.call(formStatus, function (status) {
-				displayStatus(status);
-			});
+			runMethodLoop( formFields, populateField ); // Populate form with data from localStorage
+			runMethodLoop( formStatus, displayStatus ); // If page was reloaded and delete success message exists, display it
 
 		};
 
+
 		// EVENTS, LISTENERS, AND INITS
 
-		// Save form data
-		[].forEach.call(formSaveBtn, function (btn) {
-			btn.addEventListener('click', function(e) {
-				e.preventDefault();
-				saveForm(btn);
-			}, false);
-		});
+		// Add class to HTML element to activate conditional CSS
+		buoy.addClass(document.documentElement, 'js-form-saver');
 
-		// Delete form data
-		[].forEach.call(formRemoveBtn, function (btn) {
-			btn.addEventListener('click', function(e) {
-				e.preventDefault();
-				deleteForm(btn);
-			}, false);
-		});
-
-		// Get form data on page load
-		[].forEach.call(forms, function (form) {
-			loadForm(form);
-		});
+		// Loops and listeners for each form
+		runListenerLoop(formSaveBtn, 'click', saveForm); // Save form data
+		runListenerLoop(formDeleteBtn, 'click', deleteForm); // Delete form data
+		runMethodLoop( forms, loadForm ); // Get form data on page load
 
 	}
 

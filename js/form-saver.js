@@ -9,7 +9,7 @@
 
  * ============================================================= */
 
-window.formSaveBtnr = (function (window, document, undefined) {
+window.formSaveButtonsr = (function (window, document, undefined) {
 
 	'use strict';
 
@@ -19,8 +19,9 @@ window.formSaveBtnr = (function (window, document, undefined) {
 		// SELECTORS
 
 		var forms = document.forms;
-		var formSaveBtn = document.querySelectorAll('[data-form-save]');
-		var formDeleteBtn = document.querySelectorAll('[data-form-delete]');
+		var formSaveButtons = document.querySelectorAll('[data-form-save]');
+		var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
+		var i;
 
 
 		// METHODS
@@ -48,8 +49,8 @@ window.formSaveBtnr = (function (window, document, undefined) {
 
 			var btn = this;
 			var form = btn.form;
-			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
-			var formSaveBtnrData = {};
+			var formSaveButtonsrID = form.id === null || form.id === '' ? 'formSaveButtonsr-' + document.URL : 'formSaveButtonsr-' + form.id;
+			var formSaveButtonsrData = {};
 			var formFields = form.elements;
 			var formStatus = form.querySelectorAll('[data-form-status]');
 
@@ -61,11 +62,11 @@ window.formSaveBtnr = (function (window, document, undefined) {
 				if ( !field.hasAttribute('data-form-no-save') ) {
 					if ( field.type == 'radio' || field.type == 'checkbox' ) {
 						if ( field.checked === true ) {
-							formSaveBtnrData[field.name + field.value] = 'on';
+							formSaveButtonsrData[field.name + field.value] = 'on';
 						}
 					} else if ( field.type != 'hidden' && field.type != 'submit' ) {
 						if ( field.value !== null && field.value !== '' ) {
-							formSaveBtnrData[field.name] = field.value;
+							formSaveButtonsrData[field.name] = field.value;
 						}
 					}
 				}
@@ -86,7 +87,7 @@ window.formSaveBtnr = (function (window, document, undefined) {
 			event.preventDefault();
 			runMethodLoop( formFields, prepareField ); // Add field data to array
 			runMethodLoop( formStatus, displayStatus ); // Display save success message
-			localStorage.setItem( formSaveBtnrID, JSON.stringify(formSaveBtnrData) ); // Save form data in localStorage
+			localStorage.setItem( formSaveButtonsrID, JSON.stringify(formSaveButtonsrData) ); // Save form data in localStorage
 
 			// If no form ID is provided, generate friendly console message encouraging one to be added
 			if ( form.id === null || form.id === '' ) {
@@ -102,7 +103,7 @@ window.formSaveBtnr = (function (window, document, undefined) {
 
 			var btn = this;
 			var form = btn.form;
-			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
+			var formSaveButtonsrID = form.id === null || form.id === '' ? 'formSaveButtonsr-' + document.URL : 'formSaveButtonsr-' + form.id;
 			var formStatus = form.querySelectorAll('[data-form-status]');
 			var formMessage = btn.getAttribute('data-message') === null ? '<div>Deleted!</div>' : '<div>' + btn.getAttribute('data-message') + '</div>';
 
@@ -111,7 +112,7 @@ window.formSaveBtnr = (function (window, document, undefined) {
 
 			var displayStatus = function () {
 				if ( btn.getAttribute('data-clear') == 'true' ) {
-					sessionStorage.setItem(formSaveBtnrID + '-formSaveBtnrMessage', formMessage);
+					sessionStorage.setItem(formSaveButtonsrID + '-formSaveButtonsrMessage', formMessage);
 					location.reload(false);
 				} else {
 					for (var i = formStatus.length; i--;) {
@@ -125,7 +126,7 @@ window.formSaveBtnr = (function (window, document, undefined) {
 			// EVENTS, LISTENERS, AND INITS
 
 			event.preventDefault();
-			localStorage.removeItem(formSaveBtnrID); // Remove form data
+			localStorage.removeItem(formSaveButtonsrID); // Remove form data
 			displayStatus(btn); // Display delete success message
 
 		};
@@ -135,8 +136,8 @@ window.formSaveBtnr = (function (window, document, undefined) {
 
 			// SELECTORS
 
-			var formSaveBtnrID = form.id === null || form.id === '' ? 'formSaveBtnr-' + document.URL : 'formSaveBtnr-' + form.id;
-			var formSaveBtnrData = JSON.parse( localStorage.getItem(formSaveBtnrID) );
+			var formSaveButtonsrID = form.id === null || form.id === '' ? 'formSaveButtonsr-' + document.URL : 'formSaveButtonsr-' + form.id;
+			var formSaveButtonsrData = JSON.parse( localStorage.getItem(formSaveButtonsrID) );
 			var formFields = form.elements;
 			var formStatus = form.querySelectorAll('[data-form-status]');
 
@@ -144,22 +145,22 @@ window.formSaveBtnr = (function (window, document, undefined) {
 			// METHODS
 
 			var populateField = function (field) {
-				if ( formSaveBtnrData !== null ) {
+				if ( formSaveButtonsrData !== null ) {
 					if ( field.type == 'radio' || field.type == 'checkbox' ) {
-						if ( formSaveBtnrData[field.name + field.value] == 'on' ) {
+						if ( formSaveButtonsrData[field.name + field.value] == 'on' ) {
 							field.checked = true;
 						}
 					} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-						if ( formSaveBtnrData[field.name] !== null && formSaveBtnrData[field.name] !== undefined ) {
-							field.value = formSaveBtnrData[field.name];
+						if ( formSaveButtonsrData[field.name] !== null && formSaveButtonsrData[field.name] !== undefined ) {
+							field.value = formSaveButtonsrData[field.name];
 						}
 					}
 				}
 			};
 
 			var displayStatus = function (status) {
-				status.innerHTML = sessionStorage.getItem(formSaveBtnrID + '-formSaveBtnrMessage');
-				sessionStorage.removeItem(formSaveBtnrID + '-formSaveBtnrMessage');
+				status.innerHTML = sessionStorage.getItem(formSaveButtonsrID + '-formSaveButtonsrMessage');
+				sessionStorage.removeItem(formSaveButtonsrID + '-formSaveButtonsrMessage');
 			};
 
 			// EVENTS, LISTENERS, AND INITS
@@ -175,10 +176,23 @@ window.formSaveBtnr = (function (window, document, undefined) {
 		// Add class to HTML element to activate conditional CSS
 		buoy.addClass(document.documentElement, 'js-form-saver');
 
-		// Loops and listeners for each form
-		runListenerLoop(formSaveBtn, 'click', saveForm); // Save form data
-		runListenerLoop(formDeleteBtn, 'click', deleteForm); // Delete form data
-		runMethodLoop( forms, loadForm ); // Get form data on page load
+		// When a save button is clicked, save form data
+		for (i = formSaveButtons.length; i--;) {
+			var saveBtn = formSaveButtons[i];
+			saveBtn.addEventListener('click', saveForm, false);
+		}
+
+		// When a delete button is clicked, delete form data
+		for (i = formDeleteButtons.length; i--;) {
+			var deleteBtn = formDeleteButtons[i];
+			deleteBtn.addEventListener('click', deleteForm, false);
+		}
+
+		// Get saved form data on page load
+		for (i = forms.length; i--;) {
+			var form = forms[i];
+			loadForm(form);
+		}
 
 	}
 

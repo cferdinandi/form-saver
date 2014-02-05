@@ -14,7 +14,7 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 	'use strict';
 
 	// Feature test
-	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.foreach ) {
+	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
 
 		// SELECTORS
 

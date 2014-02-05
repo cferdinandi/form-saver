@@ -5,6 +5,8 @@ A simple script that lets users save and reuse form data.
 Getting started with Form Saver is really easy. [View the online tutorial](http://cferdinandi.github.io/form-saver/) or dig through the `index.html` file.
 
 ## Changelog
+* v3.2 (February 4, 2014)
+  * Reverted to `Array.prototype.foreach` loops.
 * v3.1 (January 27, 2014)
   * Updated `addEventListener` to be more object oriented.
   * Moved feature test to script itself.

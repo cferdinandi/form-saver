@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v3.1
+	Form Saver v3.2
 	A simple script that lets users save and reuse form data.
 	http://gomakethings.com
 
@@ -25,22 +25,6 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 
 
 		// METHODS
-
-		// Event listener loop
-		var runListenerLoop = function ( items, type, listener ) {
-			for (var i = items.length; i--;) {
-				var item = items[i];
-				item.addEventListener(type, listener, false);
-			}
-		};
-
-		// For loop
-		var runMethodLoop = function ( items, method ) {
-			for (var i = items.length; i--;) {
-				var item = items[i];
-				method(item);
-			}
-		};
 
 		// Save form data to localStorage
 		var saveForm = function (event) {
@@ -73,7 +57,7 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 			};
 
 			// Display status message
-			var displayStatus = function (status ) {
+			var displayStatus = function (status) {
 				if ( btn.getAttribute('data-message') === null ) {
 					status.innerHTML = '<div>Saved!</div>';
 				} else {
@@ -85,9 +69,19 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 			// EVENTS, LISTENERS, AND INITS
 
 			event.preventDefault();
-			runMethodLoop( formFields, prepareField ); // Add field data to array
-			runMethodLoop( formStatus, displayStatus ); // Display save success message
-			localStorage.setItem( formSaveButtonsrID, JSON.stringify(formSaveButtonsrData) ); // Save form data in localStorage
+
+			// Add field data to array
+			Array.prototype.forEach.call(formFields, function (field, index) {
+				prepareField(field);
+			});
+
+			// Display save success message
+			Array.prototype.forEach.call(formStatus, function (status, index) {
+				displayStatus(status);
+			});
+
+			// Save form data in localStorage
+			localStorage.setItem( formSaveButtonsrID, JSON.stringify(formSaveButtonsrData) );
 
 			// If no form ID is provided, generate friendly console message encouraging one to be added
 			if ( form.id === null || form.id === '' ) {
@@ -115,10 +109,9 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 					sessionStorage.setItem(formSaveButtonsrID + '-formSaveButtonsrMessage', formMessage);
 					location.reload(false);
 				} else {
-					for (var i = formStatus.length; i--;) {
-						var status = formStatus[i];
+					Array.prototype.forEach.call(formStatus, function (status, index) {
 						status.innerHTML = formMessage;
-					}
+					});
 				}
 			};
 
@@ -165,8 +158,15 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 
 			// EVENTS, LISTENERS, AND INITS
 
-			runMethodLoop( formFields, populateField ); // Populate form with data from localStorage
-			runMethodLoop( formStatus, displayStatus ); // If page was reloaded and delete success message exists, display it
+			// Populate form with data from localStorage
+			Array.prototype.forEach.call(formFields, function (field, index) {
+				populateField(field);
+			});
+
+			// If page was reloaded and delete success message exists, display it
+			Array.prototype.forEach.call(formStatus, function (status, index) {
+				displayStatus(status);
+			});
 
 		};
 
@@ -177,22 +177,19 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 		buoy.addClass(document.documentElement, 'js-form-saver');
 
 		// When a save button is clicked, save form data
-		for (i = formSaveButtons.length; i--;) {
-			var saveBtn = formSaveButtons[i];
-			saveBtn.addEventListener('click', saveForm, false);
-		}
+		Array.prototype.forEach.call(formSaveButtons, function (btn, index) {
+			btn.addEventListener('click', saveForm, false);
+		});
 
 		// When a delete button is clicked, delete form data
-		for (i = formDeleteButtons.length; i--;) {
-			var deleteBtn = formDeleteButtons[i];
-			deleteBtn.addEventListener('click', deleteForm, false);
-		}
+		Array.prototype.forEach.call(formDeleteButtons, function (btn, index) {
+			btn.addEventListener('click', deleteForm, false);
+		});
 
 		// Get saved form data on page load
-		for (i = forms.length; i--;) {
-			var form = forms[i];
+		Array.prototype.forEach.call(forms, function (form, index) {
 			loadForm(form);
-		}
+		});
 
 	}
 

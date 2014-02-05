@@ -14,14 +14,13 @@ window.formSaveButtonsr = (function (window, document, undefined) {
 	'use strict';
 
 	// Feature test
-	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window ) {
+	if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.foreach ) {
 
 		// SELECTORS
 
 		var forms = document.forms;
 		var formSaveButtons = document.querySelectorAll('[data-form-save]');
 		var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
-		var i;
 
 
 		// METHODS

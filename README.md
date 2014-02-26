@@ -1,6 +1,8 @@
 # Form Saver
 A handy little script that lets users save and reuse form data. [View the demo](http://cferdinandi.github.io/form-saver/).
 
+**In This Documentation**
+
 1. [Getting Started](#getting-started)
 2. [Options & Settings](#options-and-settings)
 3. [Browser Compatibility](#browser-compatibility)

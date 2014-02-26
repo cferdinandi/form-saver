@@ -1,8 +1,184 @@
 # Form Saver
-A simple script that lets users save and reuse form data.
+A handy little script that lets users save and reuse form data, by [Chris Ferdinandi](http://gomakethings.com). [View the Demo](http://cferdinandi.github.io/form-saver/)
 
-## How It Works
-Getting started with Form Saver is really easy. [View the online tutorial](http://cferdinandi.github.io/form-saver/) or dig through the `index.html` file.
+1. [Getting Started](#getting-started)
+2. [Options & Settings](#options-and-settings)
+3. [Browser Compatability](#browser-compatability)
+4. [Changelog](#changelog)
+5. [License](#license)
+6. [Older Docs](#older-docs)
+
+
+
+## Getting Started
+
+### 1. Include Form Saver on your site.
+
+	<link rel="stylesheet" href="css/form-saver-css.css">
+	<script src="js/form-saver.js"></script>
+	<script src="buoy.js"></script>
+
+Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
+
+The `_config.scss` and `_mixins.scss` files are the same ones used in [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
+
+Form Saver also requires [Buoy](http://cferdinandi.github.io/buoy/), a vanilla JS micro-library that contains simple helper functions used by Form Saver.
+
+### 2. Add the markup to your HTML.
+
+	<form id="form-id">
+		<div>
+			<label>Text Input</label>
+			<input name="input" type="text">
+		</div>
+
+		<div>
+			<label>Text Input to Ignore</label>
+			<input data-form-no-save name="input-ignore" type="text">
+		</div>
+
+		<div>
+			<label>
+				<input type="checkbox" name="checkbox1" value="1">
+				Checkbox 1
+			</label>
+		</div>
+
+		<div>
+			<label>
+			<input type="checkbox" name="checkbox2" value="2">
+				Checkbox 2
+			</label>
+		</div>
+
+		<div>
+			<label>
+			<input type="radio" name="radioset" value="radio1">
+				Radio 1
+			</label>
+		</div>
+
+		<div>
+			<label>
+			<input type="radio" name="radioset" value="radio2">
+				Radio 2
+			</label>
+		</div>
+
+		<div>
+			<select name="select">
+				<option>Select 1</option>
+				<option>Select 2</option>
+				<option>Select 3</option>
+			</select>
+		</div>
+
+		<div>
+			<textarea name="textarea"></textarea>
+		</div>
+
+		<div class="form-saver">
+			<div data-form-status></div>
+			<div>
+				<button data-form-save>
+					Save Form Data
+				</button>
+				<button data-form-delete>
+					Delete Form Data
+				</button>
+			</div>
+		</div>
+	</form>
+
+Create your forms as normal. All form fields must have a name attribute, and checkboxes and radio buttons must also have a `value` attribute, or they won't work properly with Form Saver. Use the `[data-form-no-save]` data attribute to omit a form field from being saved.
+
+While a form ID is not required, it is strongly encouraged. Omitting an ID can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.
+
+### 3. Initialize Form Saver.
+
+	<script>
+		formSaver.init();
+	</script>
+
+In the footer of your page, after the content, initialize Form Saver. And that's it, you're done. Nice work!
+
+
+
+## Options and Settings
+
+Form Saver includes smart defaults and works right out of the box. But if you want to customize things, it also has a robust API that provides multiple ways for you to adjust the default options and settings.
+
+### Global Settings
+
+You can pass options and callbacks into Form Saver through the `init()` function:
+
+	formSaver.init({
+		deleteClear: true, // Boolean. Reload the page after deleting form data.
+		saveMessage: 'Saved!', // Message to display when form data is successfully saved.
+		deleteMessage: 'Deleted!', // Message to display when form data is successfully deleted.
+		saveClass: '', // Class to add to save success message <div>
+		deleteClass: '', // Class to add to delete success message <div>
+		initClass: 'js-form-saver', // Class added to `<html>` element when initiated
+		callbackBeforeSave: function () {}, // Function to run before a form is saved
+		callbackAfterSave: function () {}, // Function to run after a form is saved
+		callbackBeforeDelete: function () {}, // Function to run before a form is deleted
+		callbackAfterDelete: function () {}, // Function to run after a form is deleted
+		callbackBeforeLoad: function () {}, // Function to run before form data is loaded from storage
+		callbackAfterLoad: function () {} // Function to run after form data is loaded from storage
+	});
+
+### Override settings with data attributes
+
+Form Saver lets you override global settings on a form-by-form basis using the `[data-options]` data attribute:
+
+	<button
+		data-form-save
+		data-options="saveMessage: Saved!";
+		              saveClass: 'alert-success'
+	>
+		Save Form Data
+	</button>
+
+	<button
+		data-form-delete
+		data-options="deleteMessage: Deleted!";
+		              deleteClass: 'alert-success';
+		              deleteClear: true
+	>
+		Delete Form Data
+	</button>
+
+### Use Form Saver events in your own scripts
+
+You can also call Form Saver events in your own scripts:
+
+	formSaver.saveForm(
+		btn, // Node that saves the form. ex. document.querySelector('#save-btn')
+		form, // Form node to save. ex. btn.form
+		options, // Classes and callbacks. Same options as those passed into the init() function.
+		event // Optional, if a DOM event was triggered.
+	);
+
+	formSaver.deleteForm = function (
+		btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
+		form, // Form node to delete. ex. btn.form
+		options, // Classes and callbacks. Same options as those passed into the init() function.
+		event // Optional, if a DOM event was triggered.
+	);
+
+	formSaver.loadForm = function (
+		form, // Form node to delete. ex. document.querySelector('#form')
+		options // Classes and callbacks. Same options as those passed into the init() function.
+	);
+
+
+## Browser Compatability
+
+Form Saver works in all modern browsers, and IE 9 and above.
+
+Form Saver is built with modern JavaScript APIs, and uses progressive enhancement. If the JavaScript file fails to load, or if your site is viewed on older and less capable browsers, save and delete data buttons will not be displayed.
+
+
 
 ## Changelog
 * v4.0 (February 24, 2014)
@@ -30,5 +206,13 @@ Getting started with Form Saver is really easy. [View the online tutorial](http:
 * v1.0 (November 18, 2013)
   * Initial release.
 
+
+
 ## License
-Form Saver is free to use under the [MIT License](http://gomakethings.com/mit/).
+Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
+
+
+
+## Older Docs
+
+* [Version 3](http://cferdinandi.github.io/form-saver/archive/v3/)

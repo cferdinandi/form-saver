@@ -95,7 +95,7 @@
 			<div class="form-saver">
 				<div data-form-status></div>
 				<div>
-					<button data-form-save data-message="You did it. Booya!">Save Form Data</button> <button data-form-delete data-message="Your form data was deleted." data-clear="true">Delete Form Data</button>
+					<button data-form-save data-options="saveMessage: You did it. Booya!">Save Form Data</button> <button data-form-delete data-options="deleteMessage: Your form data was deleted.; deleteClear: true">Delete Form Data</button>
 				</div>
 			</div>
 		</form>
@@ -106,6 +106,22 @@
 	<!-- Javascript -->
 	<script src="js/buoy.js"></script>
 	<script src="js/form-saver.js"></script>
+	<script>
+		formSaver.init({
+			deleteClear: true,
+			saveMessage: 'Saved!',
+			deleteMessage: 'Deleted!',
+			saveClass: '',
+			deleteClass: '',
+			initClass: 'js-form-saver',
+			callbackBeforeSave: function () {},
+			callbackAfterSave: function () {},
+			callbackBeforeDelete: function () {},
+			callbackAfterDelete: function () {},
+			callbackBeforeLoad: function () {},
+			callbackAfterLoad: function () {}
+		});
+	</script>
 
 </body>
 </html>

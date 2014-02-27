@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v4.0
+	Form Saver v4.1
 	A simple script that lets users save and reuse form data, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -14,23 +14,20 @@ window.formSaver = (function (window, document, undefined) {
 	'use strict';
 
 	// Default settings
-	// Private method
-	// Returns an {object}
-	var _defaults = function () {
-		return {
-			deleteClear: true,
-			saveMessage: 'Saved!',
-			deleteMessage: 'Deleted!',
-			saveClass: '',
-			deleteClass: '',
-			initClass: 'js-form-saver',
-			callbackBeforeSave: function () {},
-			callbackAfterSave: function () {},
-			callbackBeforeDelete: function () {},
-			callbackAfterDelete: function () {},
-			callbackBeforeLoad: function () {},
-			callbackAfterLoad: function () {}
-		};
+	// Private {object} variable
+	var _defaults = {
+		deleteClear: true,
+		saveMessage: 'Saved!',
+		deleteMessage: 'Deleted!',
+		saveClass: '',
+		deleteClass: '',
+		initClass: 'js-form-saver',
+		callbackBeforeSave: function () {},
+		callbackAfterSave: function () {},
+		callbackBeforeDelete: function () {},
+		callbackAfterDelete: function () {},
+		callbackBeforeLoad: function () {},
+		callbackAfterLoad: function () {}
 	};
 
 	// Merge default settings with user options
@@ -71,7 +68,7 @@ window.formSaver = (function (window, document, undefined) {
 	var saveForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		var overrides = _getDataOptions( btn.getAttribute( 'data-options' ) );
 		var saveMessage = overrides.saveMessage || options.saveMessage;
 		var saveClass = overrides.saveClass || options.saveClass;
@@ -141,7 +138,7 @@ window.formSaver = (function (window, document, undefined) {
 	var deleteForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		var overrides = _getDataOptions( btn.getAttribute( 'data-options' ) );
 		var deleteMessage = overrides.deleteMessage || options.deleteMessage;
 		var deleteClass = overrides.deleteClass || options.deleteClass;
@@ -182,7 +179,7 @@ window.formSaver = (function (window, document, undefined) {
 	var loadForm = function ( form, options ) {
 
 		// Selectors and variables
-		options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 		var formSaverID = form.id === null || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
@@ -236,7 +233,7 @@ window.formSaver = (function (window, document, undefined) {
 		if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
 
 			// Selectors and variables
-			options = _mergeObjects( _defaults(), options || {} ); // Merge user options with defaults
+			options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
 			var forms = document.forms;
 			var formSaveButtons = document.querySelectorAll('[data-form-save]');
 			var formDeleteButtons = document.querySelectorAll('[data-form-delete]');

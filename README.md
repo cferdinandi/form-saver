@@ -185,6 +185,32 @@ formSaver.loadForm = function (
 );
 ```
 
+**Example 1**
+
+```javascript
+var options = { saveMessage: 'Your data has been saved. Booya!' };
+formSaver.saveForm( null, '#form', options );
+```
+
+**Example 2**
+
+```javascript
+var btn = document.querySelector('#delete-btn');
+var form = btn.form;
+formSaver.deleteForm( btn, form );
+```
+
+**Example 3**
+
+```javascript
+var forms = document.forms;
+for (var i = forms.length; i--;) {
+	var form = forms[i];
+	formSaver.loadForm( form );
+}
+```
+
+
 
 ## Browser Compatibility
 

@@ -69,7 +69,7 @@ window.formSaver = (function (window, document, undefined) {
 
 		// Defaults and settings
 		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		var overrides = _getDataOptions( btn.getAttribute( 'data-options' ) );
+		var overrides = _getDataOptions( btn ? btn.getAttribute('data-options') : null );
 		var saveMessage = overrides.saveMessage || options.saveMessage;
 		var saveClass = overrides.saveClass || options.saveClass;
 

@@ -188,14 +188,15 @@ formSaver.loadForm = function (
 **Example 1**
 
 ```javascript
+var form = document.querySelector('#form');
 var options = { saveMessage: 'Your data has been saved. Booya!' };
-formSaver.saveForm( null, '#form', options );
+formSaver.saveForm( null, form, options );
 ```
 
 **Example 2**
 
 ```javascript
-var btn = document.querySelector('#delete-btn');
+var btn = document.querySelector('[data-form-delete]');
 var form = btn.form;
 formSaver.deleteForm( btn, form );
 ```

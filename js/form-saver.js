@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v4.1
+	Form Saver v4.2
 	A simple script that lets users save and reuse form data, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -108,7 +108,7 @@ window.formSaver = (function (window, document, undefined) {
 			event.preventDefault();
 		}
 
-		options.callbackBeforeSave(); // Run callbacks before save
+		options.callbackBeforeSave( btn, form ); // Run callbacks before save
 
 		// Add field data to array
 		Array.prototype.forEach.call(formFields, function (field, index) {
@@ -123,7 +123,7 @@ window.formSaver = (function (window, document, undefined) {
 		// Save form data in localStorage
 		localStorage.setItem( formSaverID, JSON.stringify(formSaverData) );
 
-		options.callbackAfterSave(); // Run callbacks after save
+		options.callbackAfterSave( btn, form ); // Run callbacks after save
 
 		// If no form ID is provided, generate friendly console message encouraging one to be added
 		if ( form.id === null || form.id === '' ) {
@@ -166,10 +166,10 @@ window.formSaver = (function (window, document, undefined) {
 			event.preventDefault();
 		}
 
-		options.callbackBeforeDelete(); // Run callbacks before delete
+		options.callbackBeforeDelete( btn, form ); // Run callbacks before delete
 		localStorage.removeItem(formSaverID); // Remove form data
 		_displayStatus(); // Display delete success message
-		options.callbackAfterDelete(); // Run callbacks after delete
+		options.callbackAfterDelete( btn, form ); // Run callbacks after delete
 
 	};
 
@@ -208,7 +208,7 @@ window.formSaver = (function (window, document, undefined) {
 			sessionStorage.removeItem(formSaverID + '-formSaverMessage');
 		};
 
-		options.callbackBeforeLoad(); // Run callbacks before load
+		options.callbackBeforeLoad( form ); // Run callbacks before load
 
 		// Populate form with data from localStorage
 		Array.prototype.forEach.call(formFields, function (field, index) {
@@ -220,7 +220,7 @@ window.formSaver = (function (window, document, undefined) {
 			_displayStatus(status);
 		});
 
-		options.callbackAfterLoad(); // Run callbacks after load
+		options.callbackAfterLoad( form ); // Run callbacks after load
 
 	};
 

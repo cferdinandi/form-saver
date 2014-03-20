@@ -128,12 +128,12 @@ formSaver.init({
 	saveClass: '', // Class to add to save success message <div>
 	deleteClass: '', // Class to add to delete success message <div>
 	initClass: 'js-form-saver', // Class added to `<html>` element when initiated
-	callbackBeforeSave: function () {}, // Function to run before a form is saved
-	callbackAfterSave: function () {}, // Function to run after a form is saved
-	callbackBeforeDelete: function () {}, // Function to run before a form is deleted
-	callbackAfterDelete: function () {}, // Function to run after a form is deleted
-	callbackBeforeLoad: function () {}, // Function to run before form data is loaded from storage
-	callbackAfterLoad: function () {} // Function to run after form data is loaded from storage
+	callbackBeforeSave: function ( btn, form ) {}, // Function to run before a form is saved
+	callbackAfterSave: function ( btn, form ) {}, // Function to run after a form is saved
+	callbackBeforeDelete: function ( btn, form ) {}, // Function to run before a form is deleted
+	callbackAfterDelete: function ( btn, form ) {}, // Function to run after a form is deleted
+	callbackBeforeLoad: function ( form ) {}, // Function to run before form data is loaded from storage
+	callbackAfterLoad: function ( form ) {} // Function to run after form data is loaded from storage
 });
 ```
 
@@ -227,6 +227,9 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 
 ## Changelog
+
+* v4.2 - March 19, 2014
+	* Passed arguments into callback functions.
 * v4.1 - February 27, 2014
 	* Converted `_defaults` to a literal object
 * v4.0 - February 24, 2014

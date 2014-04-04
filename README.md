@@ -20,14 +20,11 @@ A handy little script that lets users save and reuse form data. [View the demo](
 ```html
 <link rel="stylesheet" href="css/form-saver-css.css">
 <script src="js/form-saver.js"></script>
-<script src="buoy.js"></script>
 ```
 
 Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
 
 The `_config.scss` and `_mixins.scss` files are the same ones used in [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
-
-Form Saver also requires [Buoy](http://cferdinandi.github.io/buoy/), a vanilla JS micro-library that contains simple helper functions used by Form Saver.
 
 ### 2. Add the markup to your HTML.
 
@@ -235,6 +232,8 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v5.0 - April 4, 2014
+	* Removed unneccessary Buoy dependancy.
 * v4.2 - March 19, 2014
 	* Passed arguments into callback functions.
 * v4.1 - February 27, 2014
@@ -268,4 +267,5 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Older Docs
 
+* [Version 4](https://github.com/cferdinandi/form-saver/tree/archive-v4)
 * [Version 3](http://cferdinandi.github.io/form-saver/archive/v3/)

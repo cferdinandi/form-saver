@@ -267,4 +267,5 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Older Docs
 
+* [Version 4](https://github.com/cferdinandi/form-saver/tree/archive-v4)
 * [Version 3](http://cferdinandi.github.io/form-saver/archive/v3/)

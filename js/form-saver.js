@@ -1,6 +1,6 @@
 /* =============================================================
 
-	Form Saver v4.2
+	Form Saver v5.0
 	A simple script that lets users save and reuse form data, by Chris Ferdinandi.
 	http://gomakethings.com
 
@@ -239,7 +239,7 @@ window.formSaver = (function (window, document, undefined) {
 			var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
 
 			// Add class to HTML element to activate conditional CSS
-			buoy.addClass(document.documentElement, options.initClass);
+			document.documentElement.className += (document.documentElement.className ? ' ' : '') + options.initClass;
 
 			// When a save button is clicked, save form data
 			Array.prototype.forEach.call(formSaveButtons, function (btn, index) {

@@ -6,6 +6,7 @@ A handy little script that lets users save and reuse form data.
 **In This Documentation**
 
 1. [Getting Started](#getting-started)
+2. [Installing with Package Managers](#installing-with-package-managers)
 2. [Options & Settings](#options-and-settings)
 3. [Browser Compatibility](#browser-compatibility)
 4. [How to Contribute](#how-to-contribute)
@@ -109,6 +110,16 @@ While a form ID is not required, it is strongly encouraged. Omitting an ID can c
 ```
 
 In the footer of your page, after the content, initialize Form Saver. And that's it, you're done. Nice work!
+
+
+
+## Installing with Package Managers
+
+You can install Form Saver with your favorite package manager.
+
+* **NPM:** `npm install cferdinandi/form-saver`
+* **Bower:** `bower install https://github.com/cferdinandi/form-saver.git`
+* **Component:** `component install install cferdinandi/form-saver`
 
 
 
@@ -234,6 +245,16 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v5.1.1 - June 9, 2014
+	* Converted to UMD module.
+	* Moved public APIs to exports variable.
+	* Improved feature test.
+	* Replaced `Array.prototype.forEach` hack with proper `forEach` function.
+	* Added a more well supported `trim` function.
+	* General code optimizations for better minification and performance.
+	* Updated to JSDoc documentation (sort of).
+	* Updated to three number versioning system.
+	* Added package manager installation info.
 * v5.0 - April 4, 2014
 	* Removed unneccessary Buoy dependancy.
 * v4.2 - March 19, 2014

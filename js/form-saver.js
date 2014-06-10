@@ -1,21 +1,35 @@
-/* =============================================================
+/**
+ *
+ * Form Saver v5.1.0
+ * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
+ * http://github.com/cferdinandi/form-saver
+ *
+ * Free to use under the MIT License.
+ * http://gomakethings.com/mit/
+ *
+ */
 
-	Form Saver v5.0
-	A simple script that lets users save and reuse form data, by Chris Ferdinandi.
-	http://gomakethings.com
-
-	Free to use under the MIT License.
-	http://gomakethings.com/mit/
-
- * ============================================================= */
-
-window.formSaver = (function (window, document, undefined) {
+(function (root, factory) {
+	if ( typeof define === 'function' && define.amd ) {
+		define(factory);
+	} else if ( typeof exports === 'object' ) {
+		module.exports = factory;
+	} else {
+		root.formSaver = factory(root);
+	}
+})(this, function (root) {
 
 	'use strict';
 
+	//
+	// Variables
+	//
+
+	var exports = {}; // Object for public APIs
+	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
+
 	// Default settings
-	// Private {object} variable
-	var _defaults = {
+	var defaults = {
 		deleteClear: true,
 		saveMessage: 'Saved!',
 		deleteMessage: 'Deleted!',
@@ -30,242 +44,307 @@ window.formSaver = (function (window, document, undefined) {
 		callbackAfterLoad: function () {}
 	};
 
-	// Merge default settings with user options
-	// Private method
-	// Returns an {object}
-	var _mergeObjects = function ( original, updates ) {
-		for (var key in updates) {
-			original[key] = updates[key];
+
+	//
+	// Methods
+	//
+
+	/**
+	 * Merge defaults with user options
+	 * @private
+	 * @param {Object} defaults Default settings
+	 * @param {Object} options User options
+	 * @returns {Object} Merged values of defaults and options
+	 */
+	var extend = function ( defaults, options ) {
+		for ( var key in options ) {
+			if (Object.prototype.hasOwnProperty.call(options, key)) {
+				defaults[key] = options[key];
+			}
 		}
-		return original;
+		return defaults;
 	};
 
-	// Convert data-options attribute into an object of key/value pairs
-	// Private method
-	// Returns an {object}
-	var _getDataOptions = function ( options ) {
-		if ( options === null || options === undefined  ) {
-			return {};
+	/**
+	 * A simple forEach() implementation for Arrays, Objects and NodeLists
+	 * @private
+	 * @param {Array|Object|NodeList} collection Collection of items to iterate
+	 * @param {Function} callback Callback function for each iteration
+	 * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
+	 */
+	var forEach = function (collection, callback, scope) {
+		if (Object.prototype.toString.call(collection) === '[object Object]') {
+			for (var prop in collection) {
+				if (Object.prototype.hasOwnProperty.call(collection, prop)) {
+					callback.call(scope, collection[prop], prop, collection);
+				}
+			}
 		} else {
-			var settings = {}; // Create settings object
-			options = options.split(';'); // Split into array of options
+			for (var i = 0, len = collection.length; i < len; i++) {
+				callback.call(scope, collection[i], i, collection);
+			}
+		}
+	};
 
-			// Create a key/value pair for each setting
+	/**
+	 * Remove whitespace from a string
+	 * @private
+	 * @param {String} string
+	 * @returns {String}
+	 */
+	var trim = function ( string ) {
+		return string.replace(/^\s+|\s+$/g, '');
+	};
+
+	/**
+	 * Convert data-options attribute into an object of key/value pairs
+	 * @private
+	 * @param {String} options Link-specific options as a data attribute string
+	 * @returns {Object}
+	 */
+	var getDataOptions = function ( options ) {
+		var settings = {};
+		// Create a key/value pair for each setting
+		if ( options ) {
+			options = options.split(';');
 			options.forEach( function(option) {
-				option = option.trim();
+				option = trim(option);
 				if ( option !== '' ) {
 					option = option.split(':');
-					settings[option[0]] = option[1].trim();
+					settings[option[0]] = trim(option[1]);
 				}
 			});
-			return settings;
 		}
+		return settings;
 	};
 
-	// Save form data to localStorage
-	// Public method
-	// Runs functions
-	var saveForm = function ( btn, form, options, event ) {
+	/**
+	 * Save form data to localStorage
+	 * @public
+	 * @param  {Element} btn Button that triggers form save
+	 * @param  {Element} form The form to save
+	 * @param  {Object} options
+	 * @param  {Event} event
+	 */
+	exports.saveForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		var overrides = _getDataOptions( btn ? btn.getAttribute('data-options') : null );
-		var saveMessage = overrides.saveMessage || options.saveMessage;
-		var saveClass = overrides.saveClass || options.saveClass;
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
+		settings = extend( settings, overrides ); // Merge overrides with settings
 
 		// Selectors and variables
-		var formSaverID = form.id === null || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formSaverData = {};
 		var formFields = form.elements;
 		var formStatus = form.querySelectorAll('[data-form-status]');
 
-		// Convert field data into an array
-		// Private method
-		// Runs functions
-		var _prepareField = function (field) {
+		/**
+		 * Convert field data into an array
+		 * @private
+		 * @param  {Element} field Form field to convert
+		 */
+		var prepareField = function (field) {
 			if ( !field.hasAttribute('data-form-no-save') ) {
-				if ( field.type == 'radio' || field.type == 'checkbox' ) {
+				if ( field.type.toLowerCase() === 'radio' || field.type.toLowerCase() === 'checkbox' ) {
 					if ( field.checked === true ) {
 						formSaverData[field.name + field.value] = 'on';
 					}
-				} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-					if ( field.value !== null && field.value !== '' ) {
+				} else if ( field.type.toLowerCase() !== 'hidden' && field.type.toLowerCase() !== 'submit' ) {
+					if ( field.value && field.value !== '' ) {
 						formSaverData[field.name] = field.value;
 					}
 				}
 			}
 		};
 
-		// Display status message
-		// Private method
-		// Runs functions
-		var _displayStatus = function ( status, saveMessage, saveClass ) {
+		/**
+		 * Display status message
+		 * @private
+		 * @param  {Element} status The element that displays the status message
+		 * @param  {String} saveMessage The message to display on save
+		 * @param  {String} saveClass The class to apply to the save message wrappers
+		 */
+		var displayStatus = function ( status, saveMessage, saveClass ) {
 			status.innerHTML = '<div class="' + saveClass + '">' + saveMessage + '</div>';
 		};
 
 		// If a link or button, prevent default click event
-		if ( btn && (btn.tagName === 'A' || btn.tagName === 'BUTTON' ) && event ) {
+		if ( btn && (btn.tagName.toLowerCase() === 'a' || btn.tagName.toLowerCase() === 'button' ) && event ) {
 			event.preventDefault();
 		}
 
-		options.callbackBeforeSave( btn, form ); // Run callbacks before save
+		settings.callbackBeforeSave( btn, form ); // Run callbacks before save
 
 		// Add field data to array
-		Array.prototype.forEach.call(formFields, function (field, index) {
-			_prepareField(field);
+		forEach(formFields, function (field) {
+			prepareField(field);
 		});
 
 		// Display save success message
-		Array.prototype.forEach.call(formStatus, function (status, index) {
-			_displayStatus( status, saveMessage, saveClass );
+		forEach(formStatus, function (status) {
+			displayStatus( status, settings.saveMessage, settings.saveClass );
 		});
 
 		// Save form data in localStorage
 		localStorage.setItem( formSaverID, JSON.stringify(formSaverData) );
 
-		options.callbackAfterSave( btn, form ); // Run callbacks after save
+		settings.callbackAfterSave( btn, form ); // Run callbacks after save
 
 		// If no form ID is provided, generate friendly console message encouraging one to be added
-		if ( form.id === null || form.id === '' ) {
+		if ( !form.id || form.id === '' ) {
 			console.log('FORM SAVER WARNING: This form has no ID attribute. This can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.');
 		}
 
 	};
 
-	// Remove form data from localStorage
-	// Public method
-	// Runs functions
-	var deleteForm = function ( btn, form, options, event ) {
+	/**
+	 * Remove form data from localStorage
+	 * @public
+	 * @param  {Element} btn Button that triggers form delete
+	 * @param  {Element} form The form to remove from localStorage
+	 * @param  {Object} options
+	 * @param  {Event} event
+	 */
+	exports.deleteForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		var overrides = _getDataOptions( btn.getAttribute( 'data-options' ) );
-		var deleteMessage = overrides.deleteMessage || options.deleteMessage;
-		var deleteClass = overrides.deleteClass || options.deleteClass;
-		var deleteClear = overrides.deleteClear || options.deleteClear;
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var overrides = getDataOptions( btn.getAttribute( 'data-options' ) );
+		settings = extend( settings, overrides ); // Merge overrides with settings
 
 		// Selectors and variables
-		var formSaverID = form.id === null || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formStatus = form.querySelectorAll('[data-form-status]');
-		var formMessage = '<div class="' + deleteClass + '">' + deleteMessage + '</div>';
+		var formMessage = '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
 
-		// Display success message
-		var _displayStatus = function () {
-			if ( deleteClear === true || deleteClear === 'true' ) {
+		/**
+		 * Display succes message
+		 * @private
+		 */
+		var displayStatus = function () {
+			if ( settings.deleteClear === true || settings.deleteClear === 'true' ) {
 				sessionStorage.setItem(formSaverID + '-formSaverMessage', formMessage);
 				location.reload(false);
 			} else {
-				Array.prototype.forEach.call(formStatus, function (status, index) {
+				forEach(formStatus, function (status) {
 					status.innerHTML = formMessage;
 				});
 			}
 		};
 
 		// If a link or button, prevent default click event
-		if ( btn && (btn.tagName === 'A' || btn.tagName === 'BUTTON' ) && event ) {
+		if ( btn && (btn.tagName.toLowerCase() === 'a' || btn.tagName.toLowerCase() === 'button' ) && event ) {
 			event.preventDefault();
 		}
 
-		options.callbackBeforeDelete( btn, form ); // Run callbacks before delete
+		settings.callbackBeforeDelete( btn, form ); // Run callbacks before delete
 		localStorage.removeItem(formSaverID); // Remove form data
-		_displayStatus(); // Display delete success message
-		options.callbackAfterDelete( btn, form ); // Run callbacks after delete
+		displayStatus(); // Display delete success message
+		settings.callbackAfterDelete( btn, form ); // Run callbacks after delete
 
 	};
 
-	// Load form data from localStorage
-	// Public method
-	// Runs functions
-	var loadForm = function ( form, options ) {
+	/**
+	 * Load form data from localStorage
+	 * @public
+	 * @param  {Element} form The form to get data for
+	 * @param  {Object} options
+	 */
+	exports.loadForm = function ( form, options ) {
 
 		// Selectors and variables
-		options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-		var formSaverID = form.id === null || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
 		var formStatus = form.querySelectorAll('[data-form-status]');
 
-		// Populate a field with local storage data
-		// Private method
-		// Runs functions
-		var _populateField = function ( field ) {
-			if ( formSaverData !== null ) {
-				if ( field.type == 'radio' || field.type == 'checkbox' ) {
-					if ( formSaverData[field.name + field.value] == 'on' ) {
+		/**
+		 * Populate a field with localStorage data
+		 * @private
+		 * @param  {Element} field The field to get data form
+		 */
+		var populateField = function ( field ) {
+			if ( formSaverData ) {
+				if ( field.type.toLowerCase() === 'radio' || field.type.toLowerCase() === 'checkbox' ) {
+					if ( formSaverData[field.name + field.value] === 'on' ) {
 						field.checked = true;
 					}
-				} else if ( field.type != 'hidden' && field.type != 'submit' ) {
-					if ( formSaverData[field.name] !== null && formSaverData[field.name] !== undefined ) {
+				} else if ( field.type.toLowerCase() !== 'hidden' && field.type.toLowerCase() !== 'submit' ) {
+					if ( formSaverData[field.name] ) {
 						field.value = formSaverData[field.name];
 					}
 				}
 			}
 		};
 
-		// Display success message
-		var _displayStatus = function ( status ) {
+		/**
+		 * Display success message
+		 * @param  {Element} status The element that displays the status message
+		 */
+		var displayStatus = function ( status ) {
 			status.innerHTML = sessionStorage.getItem(formSaverID + '-formSaverMessage');
 			sessionStorage.removeItem(formSaverID + '-formSaverMessage');
 		};
 
-		options.callbackBeforeLoad( form ); // Run callbacks before load
+		settings.callbackBeforeLoad( form ); // Run callbacks before load
 
 		// Populate form with data from localStorage
-		Array.prototype.forEach.call(formFields, function (field, index) {
-			_populateField(field);
+		forEach(formFields, function (field) {
+			populateField(field);
 		});
 
 		// If page was reloaded and delete success message exists, display it
-		Array.prototype.forEach.call(formStatus, function (status, index) {
-			_displayStatus(status);
+		forEach(formStatus, function (status) {
+			displayStatus(status);
 		});
 
-		options.callbackAfterLoad( form ); // Run callbacks after load
+		settings.callbackAfterLoad( form ); // Run callbacks after load
 
 	};
 
-	// Initialize Form Saver
-	// Public function
-	// Runs functions
-	var init = function ( options ) {
+	/**
+	 * Initialize Form Saver
+	 * @public
+	 * @param {Object} options User settings
+	 */
+	exports.init = function ( options ) {
 
-		// Feature test before initializing
-		if ( 'querySelector' in document && 'addEventListener' in window && 'localStorage' in window && Array.prototype.forEach ) {
+		// feature test
+		if ( !supports ) return;
 
-			// Selectors and variables
-			options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
-			var forms = document.forms;
-			var formSaveButtons = document.querySelectorAll('[data-form-save]');
-			var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
+		// Selectors and variables
+		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var forms = document.forms;
+		var formSaveButtons = document.querySelectorAll('[data-form-save]');
+		var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
 
-			// Add class to HTML element to activate conditional CSS
-			document.documentElement.className += (document.documentElement.className ? ' ' : '') + options.initClass;
+		// Add class to HTML element to activate conditional CSS
+		document.documentElement.className += (document.documentElement.className ? ' ' : '') + settings.initClass;
 
-			// When a save button is clicked, save form data
-			Array.prototype.forEach.call(formSaveButtons, function (btn, index) {
-				btn.addEventListener('click', saveForm.bind( null, btn, btn.form, options ), false);
-			});
+		// When a save button is clicked, save form data
+		forEach(formSaveButtons, function (btn) {
+			btn.addEventListener('click', exports.saveForm.bind( null, btn, btn.form, settings ), false);
+		});
 
-			// When a delete button is clicked, delete form data
-			Array.prototype.forEach.call(formDeleteButtons, function (btn, index) {
-				btn.addEventListener('click', deleteForm.bind( null, btn, btn.form, options ), false);
-			});
+		// When a delete button is clicked, delete form data
+		forEach(formDeleteButtons, function (btn) {
+			btn.addEventListener('click', exports.deleteForm.bind( null, btn, btn.form, settings ), false);
+		});
 
-			// Get saved form data on page load
-			Array.prototype.forEach.call(forms, function (form, index) {
-				loadForm( form, options );
-			});
-
-		}
+		// Get saved form data on page load
+		forEach(forms, function (form) {
+			exports.loadForm( form, settings );
+		});
 
 	};
 
-	// Return public methods
-	return {
-		init: init,
-		saveForm: saveForm,
-		deleteForm: deleteForm,
-		loadForm: loadForm
-	};
 
-})(window, document);
+	//
+	// Public APIs
+	//
+
+	return exports;
+
+});

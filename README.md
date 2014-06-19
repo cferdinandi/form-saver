@@ -119,7 +119,7 @@ You can install Form Saver with your favorite package manager.
 
 * **NPM:** `npm install cferdinandi/form-saver`
 * **Bower:** `bower install https://github.com/cferdinandi/form-saver.git`
-* **Component:** `component install install cferdinandi/form-saver`
+* **Component:** `component install cferdinandi/form-saver`
 
 
 
@@ -245,6 +245,8 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v5.1.2 - June 19, 2014
+	* Fixed factory/root/UMD definition.
 * v5.1.1 - June 9, 2014
 	* Converted to UMD module.
 	* Moved public APIs to exports variable.

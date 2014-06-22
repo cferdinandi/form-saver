@@ -1,4 +1,4 @@
-# Form Saver
+# Form Saver [![Build Status](https://travis-ci.org/cferdinandi/form-saver.svg)](https://travis-ci.org/cferdinandi/form-saver)
 A handy little script that lets users save and reuse form data.
 
 [Download Form Saver 5](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
@@ -18,16 +18,18 @@ A handy little script that lets users save and reuse form data.
 
 ## Getting Started
 
+Compiled and production-ready code can be found in the `dist` directory. The `src` directory contains development code. Unit tests are located in the `test` directory.
+
 ### 1. Include Form Saver on your site.
 
 ```html
-<link rel="stylesheet" href="css/form-saver-css.css">
-<script src="js/form-saver.js"></script>
+<link rel="stylesheet" href="dist/css/form-saver-css.css">
+<script src="dist/js/form-saver.js"></script>
 ```
 
 Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
 
-The `_config.scss` and `_mixins.scss` files are the same ones used in [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
+Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
 
 ### 2. Add the markup to your HTML.
 
@@ -245,6 +247,12 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v5.2.0 - June 21, 2014
+	* Converted to gulp.js workflow.
+	* Added unit testing.
+	* Updated naming conventions.
+	* Removed unused `_config.scss` and `_mixins.scss` files.
+	* Added minified versions of files.
 * v5.1.2 - June 19, 2014
 	* Fixed factory/root/UMD definition.
 * v5.1.1 - June 9, 2014

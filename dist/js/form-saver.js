@@ -1,5 +1,5 @@
 /**
- * form-saver v5.2.0
+ * form-saver v5.2.1
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -25,6 +25,7 @@
 
 	var exports = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
+	var settings;
 
 	// Default settings
 	var defaults = {
@@ -48,22 +49,6 @@
 	//
 
 	/**
-	 * Merge defaults with user options
-	 * @private
-	 * @param {Object} defaults Default settings
-	 * @param {Object} options User options
-	 * @returns {Object} Merged values of defaults and options
-	 */
-	var extend = function ( defaults, options ) {
-		for ( var key in options ) {
-			if (Object.prototype.hasOwnProperty.call(options, key)) {
-				defaults[key] = options[key];
-			}
-		}
-		return defaults;
-	};
-
-	/**
 	 * A simple forEach() implementation for Arrays, Objects and NodeLists
 	 * @private
 	 * @param {Array|Object|NodeList} collection Collection of items to iterate
@@ -82,6 +67,24 @@
 				callback.call(scope, collection[i], i, collection);
 			}
 		}
+	};
+
+	/**
+	 * Merge defaults with user options
+	 * @private
+	 * @param {Object} defaults Default settings
+	 * @param {Object} options User options
+	 * @returns {Object} Merged values of defaults and options
+	 */
+	var extend = function ( defaults, options ) {
+		var extended = {};
+		forEach(defaults, function (value, prop) {
+			extended[prop] = defaults[prop];
+		});
+		forEach(options, function (value, prop) {
+			extended[prop] = options[prop];
+		});
+		return extended;
 	};
 
 	/**
@@ -127,7 +130,7 @@
 	exports.saveForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
 		settings = extend( settings, overrides ); // Merge overrides with settings
 
@@ -207,7 +210,7 @@
 	exports.deleteForm = function ( btn, form, options, event ) {
 
 		// Defaults and settings
-		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var overrides = getDataOptions( btn.getAttribute( 'data-options' ) );
 		settings = extend( settings, overrides ); // Merge overrides with settings
 
@@ -252,7 +255,7 @@
 	exports.loadForm = function ( form, options ) {
 
 		// Selectors and variables
-		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
@@ -313,7 +316,7 @@
 		if ( !supports ) return;
 
 		// Selectors and variables
-		var settings = extend( defaults, options || {} ); // Merge user options with defaults
+		settings = extend( defaults, options || {} ); // Merge user options with defaults
 		var forms = document.forms;
 		var formSaveButtons = document.querySelectorAll('[data-form-save]');
 		var formDeleteButtons = document.querySelectorAll('[data-form-delete]');

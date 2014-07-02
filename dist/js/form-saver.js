@@ -1,5 +1,5 @@
 /**
- * form-saver v5.3.0
+ * form-saver v6.0.0
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -108,19 +108,7 @@
 	 * @returns {Object}
 	 */
 	var getDataOptions = function ( options ) {
-		var settings = {};
-		// Create a key/value pair for each setting
-		if ( options ) {
-			options = options.split(';');
-			options.forEach( function(option) {
-				option = trim(option);
-				if ( option !== '' ) {
-					option = option.split(':');
-					settings[option[0]] = trim(option[1]);
-				}
-			});
-		}
-		return settings;
+		return !options || !(typeof JSON === 'object' && typeof JSON.parse === 'function') ? {} : JSON.parse( options );
 	};
 
 	/**
@@ -171,7 +159,7 @@
 		 * @param  {String} saveClass The class to apply to the save message wrappers
 		 */
 		var displayStatus = function ( status, saveMessage, saveClass ) {
-			status.innerHTML = '<div class="' + saveClass + '">' + saveMessage + '</div>';
+			status.innerHTML = saveClass === '' ? '<div>' + saveMessage + '</div>' : '<div class="' + saveClass + '">' + saveMessage + '</div>';
 		};
 
 		// If a link or button, prevent default click event
@@ -215,13 +203,13 @@
 
 		// Defaults and settings
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
-		var overrides = getDataOptions( btn.getAttribute( 'data-options' ) );
+		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
 		settings = extend( settings, overrides ); // Merge overrides with settings
 
 		// Selectors and variables
 		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
 		var formStatus = form.querySelectorAll('[data-form-status]');
-		var formMessage = '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
+		var formMessage = settings.deleteClass === '' ? '<div>' + settings.deleteMessage + '</div>' : '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
 
 		/**
 		 * Display succes message

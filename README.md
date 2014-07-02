@@ -157,21 +157,27 @@ Form Saver lets you override global settings on a form-by-form basis using the `
 ```html
 <button
 	data-form-save
-	data-options="saveMessage: Saved!;
-	              saveClass: 'alert-success'"
+	data-options='{
+					"saveMessage": "Saved!",
+					"saveClass": "alert-success"
+	              }'
 >
 	Save Form Data
 </button>
 
 <button
 	data-form-delete
-	data-options="deleteMessage: Deleted!;
-	              deleteClass: 'alert-success';
-	              deleteClear: true"
+	data-options='{
+					"deleteMessage": "Deleted!",
+					"deleteClass": "alert-success",
+					"deleteClear": true
+	              }'
 >
 	Delete Form Data
 </button>
 ```
+
+**Note:** You must use [valid JSON](http://jsonlint.com/) in order for the `data-options` overrides to work.
 
 ### Use Form Saver events in your own scripts
 
@@ -267,9 +273,10 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
-* v5.3.0 - July 1, 2014
+* v6.0.0 - July 1, 2014
 	* Added `destroy()` method.
 	* Updated unit tests.
+	* Updated `getDataOptions()` method to use JSON.
 * v5.2.1 - June 28, 2014
 	* Fixed `extend()` method.
 * v5.2.0 - June 21, 2014

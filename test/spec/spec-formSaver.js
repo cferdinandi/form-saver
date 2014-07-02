@@ -1,5 +1,7 @@
 describe('Form Saver', function () {
 
+	// @todo Update script to find form for links, not just buttons
+
 	//
 	// Helper Functions
 	//
@@ -44,15 +46,17 @@ describe('Form Saver', function () {
 
 				'<textarea name="textarea"></textarea>' +
 
+				'<input type="hidden" name="hidden" value="hidden">' +
+
 				'<div class="form-saver">' +
 					'<div data-form-status></div>' +
 					'<div>' +
-						'<a data-form-save href="#">' +
+						'<button data-form-save>' +
 							'Save Form Data' +
-						'</a>' +
-						'<a data-form-delete href="#">' +
+						'</button>' +
+						'<button data-form-delete data-options=\'{"deleteClear": false}\'>' +
 							'Delete Form Data' +
-						'</a>' +
+						'</button>' +
 					'</div>' +
 				'</div>' +
 			'</form>';
@@ -132,34 +136,194 @@ describe('Form Saver', function () {
 
 	});
 
-	// describe('Should merge user options into defaults', function () {
-	// @todo
+	describe('Should merge user options into defaults', function () {
 
-	// 	var toggle, content, doc;
+		var form, save, del, status, doc;
 
-	// 	beforeEach(function () {
-	// 		injectElem();
-	// 		houdini.init({
-	// 			toggleActiveClass: 'toggle-active',
-	// 			contentActiveClass: 'content-active',
-	// 			initClass: 'js-test',
-	// 			callbackBefore: function () { document.documentElement.classList.add('callback-before'); },
-	// 			callbackAfter: function () { document.documentElement.classList.add('callback-after'); }
-	// 		});
-	// 		toggle = document.querySelector('[data-collapse]');
-	// 		content = document.querySelector( toggle.getAttribute('data-collapse') );
-	// 		doc = document.documentElement;
-	// 	});
+		beforeEach(function () {
+			injectElem();
+			formSaver.init({
+				saveMessage: 'Woohoo!',
+				deleteMessage: 'Boohoo!',
+				saveClass: 'save',
+				deleteClass: 'delete',
+				initClass: 'js-test',
+				callbackBeforeSave: function () { document.documentElement.classList.add('callback-before'); },
+				callbackAfterSave: function () { document.documentElement.classList.add('callback-after'); }
+			});
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			del = document.querySelector('[data-form-delete]');
+			status = document.querySelector('[data-form-status]');
+			doc = document.documentElement;
+		});
 
-	// 	it('User options should be merged into defaults', function () {
-	// 		trigger('click', toggle);
-	// 		expect(toggle.classList.contains('toggle-active')).toBe(true);
-	// 		expect(content.classList.contains('content-active')).toBe(true);
-	// 		expect(doc.classList.contains('js-test')).toBe(true);
-	// 		expect(doc.classList.contains('callback-before')).toBe(true);
-	// 		expect(doc.classList.contains('callback-after')).toBe(true);
-	// 	});
+		it('User options should be merged into defaults', function () {
+			trigger('click', save);
+			expect(status.innerHTML).toBe('<div class="save">Woohoo!</div>');
+			expect(doc.classList.contains('js-test')).toBe(true);
+			expect(doc.classList.contains('callback-before')).toBe(true);
+			expect(doc.classList.contains('callback-after')).toBe(true);
+			trigger('click', del);
+			expect(status.innerHTML).toBe('<div class="delete">Boohoo!</div>');
+		});
 
-	// });
+	});
+
+
+	//
+	// Events
+	//
+
+	describe('Should save and delete content on click', function () {
+
+		var form, save, del, status;
+
+		beforeEach(function () {
+			injectElem();
+			formSaver.init();
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			del = document.querySelector('[data-form-delete]');
+			status = document.querySelector('[data-form-status]');
+		});
+
+		it('Form data should save to localStorage when save button clicked', function () {
+			trigger('click', save);
+			expect(localStorage.getItem('formSaver-' + form.id)).not.toBe(null);
+			expect(status.innerHTML).toBe('<div>Saved!</div>');
+		});
+
+		it('Form data should delete from localStorage when delete button clicked', function () {
+			trigger('click', save);
+			expect(localStorage.getItem('formSaver-' + form.id)).not.toBe(null);
+			trigger('click', del);
+			expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
+			expect(status.innerHTML).toBe('<div>Deleted!</div>');
+		});
+
+		it('Data in localStorage should match form content', function () {
+			var formData = JSON.stringify({
+				"input": "input",
+				"checkbox11": "on",
+				"checkbox22": "on",
+				"radiosetradio2":  "on",
+				"select": "Select 2",
+				"textarea": "textarea"
+			});
+			form.elements['input'].value = 'input';
+			form.elements['input-ignore'].value = 'ignore';
+			form.elements['checkbox1'].checked = true;
+			form.elements['checkbox2'].checked = true;
+			form.elements['radioset'][1].checked = true;
+			form.elements['select'].options[1].selected = true;
+			form.elements['textarea'].value = 'textarea';
+			trigger('click', save);
+			expect(localStorage.getItem('formSaver-' + form.id)).toEqual(formData);
+		});
+
+	});
+
+	describe('Should use data-options overrides if specified', function () {
+
+		var form, save, del, data, status;
+
+		beforeEach(function () {
+			injectElem();
+			formSaver.init();
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			del = document.querySelector('[data-form-delete]');
+			status = document.querySelector('[data-form-status]');
+			save.setAttribute( 'data-options', '{ "saveMessage": "Way to go all-star!", "saveClass": "magic-sauce" }' );
+		});
+
+		it('Form data should save to localStorage when save button clicked', function () {
+			trigger('click', save);
+			expect(status.innerHTML).toBe('<div class="magic-sauce">Way to go all-star!</div>');
+		});
+
+	});
+
+
+	//
+	// APIs
+	//
+
+	describe('Should save from public API', function () {
+
+		var form, save, status;
+
+		beforeEach(function () {
+			injectElem();
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			status = document.querySelector('[data-form-status]');
+			formSaver.saveForm(save, form, null, null);
+		});
+
+		it('Should save data to localStorage', function () {
+			expect(localStorage.getItem('formSaver-' + form.id)).not.toBe(null);
+		});
+
+		it('Should update form status', function () {
+			expect(status.innerHTML).toBe('<div>Saved!</div>');
+		});
+
+	});
+
+	describe('Should delete from public API', function () {
+
+		var form, save, del, status;
+
+		beforeEach(function () {
+			injectElem();
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			del = document.querySelector('[data-form-delete]');
+			status = document.querySelector('[data-form-status]');
+			formSaver.saveForm(save, form, null, null);
+			formSaver.deleteForm(del, form, null, null);
+		});
+
+		it('Should delete data from localStorage', function () {
+			expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
+		});
+
+		it('Should update form status', function () {
+			expect(status.innerHTML).toBe('<div>Deleted!</div>');
+		});
+
+	});
+
+	describe('Should remove initialized plugin', function () {
+
+		var form, save, del, status, doc;
+
+		beforeEach(function () {
+			injectElem();
+			formSaver.init();
+			form = document.forms[0];
+			save = document.querySelector('[data-form-save]');
+			del = document.querySelector('[data-form-delete]');
+			status = document.querySelector('[data-form-status]');
+			doc = document.documentElement;
+		});
+
+		it('Form Saver should be uninitialized', function () {
+			trigger('click', save);
+			expect(localStorage.getItem('formSaver-' + form.id)).not.toBe(null);
+			expect(status.innerHTML).toBe('<div>Saved!</div>');
+			trigger('click', del);
+			expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
+			expect(status.innerHTML).toBe('<div>Deleted!</div>');
+			formSaver.destroy();
+			// trigger('click', toggle);
+			// expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
+			expect(doc.classList.contains('js-form-saver')).toBe(false);
+		});
+
+	});
+
 
 });

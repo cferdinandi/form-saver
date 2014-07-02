@@ -175,7 +175,10 @@ Form Saver lets you override global settings on a form-by-form basis using the `
 
 ### Use Form Saver events in your own scripts
 
-You can also call Form Saver events in your own scripts:
+You can also call Form Saver events in your own scripts.
+
+#### saveForm()
+Save a form's data.
 
 ```javascript
 formSaver.saveForm(
@@ -184,21 +187,9 @@ formSaver.saveForm(
 	options, // Classes and callbacks. Same options as those passed into the init() function.
 	event // Optional, if a DOM event was triggered.
 );
-
-formSaver.deleteForm = function (
-	btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
-	form, // Form node to delete. ex. btn.form
-	options, // Classes and callbacks. Same options as those passed into the init() function.
-	event // Optional, if a DOM event was triggered.
-);
-
-formSaver.loadForm = function (
-	form, // Form node to delete. ex. document.querySelector('#form')
-	options // Classes and callbacks. Same options as those passed into the init() function.
-);
 ```
 
-**Example 1**
+**Example**
 
 ```javascript
 var form = document.querySelector('#form');
@@ -206,7 +197,19 @@ var options = { saveMessage: 'Your data has been saved. Booya!' };
 formSaver.saveForm( null, form, options );
 ```
 
-**Example 2**
+#### deleteForm()
+Delete a form's data.
+
+```javascript
+formSaver.deleteForm = function (
+	btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
+	form, // Form node to delete. ex. btn.form
+	options, // Classes and callbacks. Same options as those passed into the init() function.
+	event // Optional, if a DOM event was triggered.
+);
+```
+
+**Example**
 
 ```javascript
 var btn = document.querySelector('[data-form-delete]');
@@ -214,7 +217,17 @@ var form = btn.form;
 formSaver.deleteForm( btn, form );
 ```
 
-**Example 3**
+#### loadForm()
+Load a form's saved data.
+
+```javascript
+formSaver.loadForm = function (
+	form, // Form node to delete. ex. document.querySelector('#form')
+	options // Classes and callbacks. Same options as those passed into the init() function.
+);
+```
+
+**Example**
 
 ```javascript
 var forms = document.forms;
@@ -222,6 +235,13 @@ for (var i = forms.length; i--;) {
 	var form = forms[i];
 	formSaver.loadForm( form );
 }
+```
+
+#### destroy()
+Destroy the current `formSaver.init()`.
+
+```javascript
+formSaver.destroy();
 ```
 
 
@@ -247,6 +267,9 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v5.3.0 - July 1, 2014
+	* Added `destroy()` method.
+	* Updated unit tests.
 * v5.2.1 - June 28, 2014
 	* Fixed `extend()` method.
 * v5.2.0 - June 21, 2014

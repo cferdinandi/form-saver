@@ -1,5 +1,5 @@
 /**
- * form-saver v5.2.1
+ * form-saver v6.0.0
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -25,7 +25,11 @@
 
 	var exports = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
-	var settings;
+	var eventListeners = { //Listener arrays
+		save: [],
+		del: []
+	};
+	var settings, forms, saveBtns, deleteBtns;
 
 	// Default settings
 	var defaults = {
@@ -104,19 +108,7 @@
 	 * @returns {Object}
 	 */
 	var getDataOptions = function ( options ) {
-		var settings = {};
-		// Create a key/value pair for each setting
-		if ( options ) {
-			options = options.split(';');
-			options.forEach( function(option) {
-				option = trim(option);
-				if ( option !== '' ) {
-					option = option.split(':');
-					settings[option[0]] = trim(option[1]);
-				}
-			});
-		}
-		return settings;
+		return !options || !(typeof JSON === 'object' && typeof JSON.parse === 'function') ? {} : JSON.parse( options );
 	};
 
 	/**
@@ -127,7 +119,7 @@
 	 * @param  {Object} options
 	 * @param  {Event} event
 	 */
-	exports.saveForm = function ( btn, form, options, event ) {
+	exports.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
@@ -135,7 +127,8 @@
 		settings = extend( settings, overrides ); // Merge overrides with settings
 
 		// Selectors and variables
-		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var form = document.querySelector(formID);
+		var formSaverID = 'formSaver-' + form.id;
 		var formSaverData = {};
 		var formFields = form.elements;
 		var formStatus = form.querySelectorAll('[data-form-status]');
@@ -167,7 +160,7 @@
 		 * @param  {String} saveClass The class to apply to the save message wrappers
 		 */
 		var displayStatus = function ( status, saveMessage, saveClass ) {
-			status.innerHTML = '<div class="' + saveClass + '">' + saveMessage + '</div>';
+			status.innerHTML = saveClass === '' ? '<div>' + saveMessage + '</div>' : '<div class="' + saveClass + '">' + saveMessage + '</div>';
 		};
 
 		// If a link or button, prevent default click event
@@ -192,11 +185,6 @@
 
 		settings.callbackAfterSave( btn, form ); // Run callbacks after save
 
-		// If no form ID is provided, generate friendly console message encouraging one to be added
-		if ( !form.id || form.id === '' ) {
-			console.log('FORM SAVER WARNING: This form has no ID attribute. This can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.');
-		}
-
 	};
 
 	/**
@@ -207,17 +195,18 @@
 	 * @param  {Object} options
 	 * @param  {Event} event
 	 */
-	exports.deleteForm = function ( btn, form, options, event ) {
+	exports.deleteForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
-		var overrides = getDataOptions( btn.getAttribute( 'data-options' ) );
+		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
 		settings = extend( settings, overrides ); // Merge overrides with settings
 
 		// Selectors and variables
-		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var form = document.querySelector(formID);
+		var formSaverID = 'formSaver-' + form.id;
 		var formStatus = form.querySelectorAll('[data-form-status]');
-		var formMessage = '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
+		var formMessage = settings.deleteClass === '' ? '<div>' + settings.deleteMessage + '</div>' : '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
 
 		/**
 		 * Display succes message
@@ -256,7 +245,7 @@
 
 		// Selectors and variables
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
-		var formSaverID = !form.id || form.id === '' ? 'formSaver-' + document.URL : 'formSaver-' + form.id;
+		var formSaverID = 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
 		var formStatus = form.querySelectorAll('[data-form-status]');
@@ -306,6 +295,31 @@
 	};
 
 	/**
+	 * Destroy the current initialization.
+	 * @public
+	 */
+	exports.destroy = function () {
+		if ( !settings ) return;
+		document.documentElement.classList.remove( settings.initClass );
+		if ( saveBtns ) {
+			forEach( saveBtns, function ( btn, index ) {
+				btn.removeEventListener( 'click', eventListeners.save[index], false );
+			});
+			eventListeners.save = [];
+		}
+		if ( deleteBtns ) {
+			forEach( deleteBtns, function ( btn, index ) {
+				btn.removeEventListener( 'click', eventListeners.del[index], false );
+			});
+			eventListeners.del = [];
+		}
+		settings = null;
+		forms = null;
+		saveBtns = null;
+		deleteBtns = null;
+	};
+
+	/**
 	 * Initialize Form Saver
 	 * @public
 	 * @param {Object} options User settings
@@ -315,23 +329,28 @@
 		// feature test
 		if ( !supports ) return;
 
+		// Destroy any existing initializations
+		exports.destroy();
+
 		// Selectors and variables
 		settings = extend( defaults, options || {} ); // Merge user options with defaults
-		var forms = document.forms;
-		var formSaveButtons = document.querySelectorAll('[data-form-save]');
-		var formDeleteButtons = document.querySelectorAll('[data-form-delete]');
+		forms = document.forms;
+		saveBtns = document.querySelectorAll('[data-form-save]');
+		deleteBtns = document.querySelectorAll('[data-form-delete]');
 
 		// Add class to HTML element to activate conditional CSS
 		document.documentElement.className += (document.documentElement.className ? ' ' : '') + settings.initClass;
 
 		// When a save button is clicked, save form data
-		forEach(formSaveButtons, function (btn) {
-			btn.addEventListener('click', exports.saveForm.bind( null, btn, btn.form, settings ), false);
+		forEach(saveBtns, function (btn, index) {
+			eventListeners.save[index] = exports.saveForm.bind( null, btn, btn.getAttribute('data-form-save'), settings );
+			btn.addEventListener('click', eventListeners.save[index], false);
 		});
 
 		// When a delete button is clicked, delete form data
-		forEach(formDeleteButtons, function (btn) {
-			btn.addEventListener('click', exports.deleteForm.bind( null, btn, btn.form, settings ), false);
+		forEach(deleteBtns, function (btn, index) {
+			eventListeners.del[index] = exports.deleteForm.bind( null, btn, btn.getAttribute('data-form-delete'), settings );
+			btn.addEventListener('click', eventListeners.del[index], false);
 		});
 
 		// Get saved form data on page load

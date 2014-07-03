@@ -27,7 +27,7 @@
 	</style>
 
 	<!-- stylesheets -->
-	<link rel="stylesheet" href="css/form-saver-css.css" type="text/css">
+	<link rel="stylesheet" href="dist/css/form-saver.css" type="text/css">
 
 	<!-- HTML5 Shim for IE -->
 	<!--[if IE]>
@@ -44,7 +44,7 @@
 
 		<br><br>
 
-		<form id="form">
+		<form id="form-id">
 		    <div>
 		        <label>Text Input</label>
 		        <input name="input" type="text">
@@ -98,10 +98,10 @@
 		    <div class="form-saver">
 		        <div data-form-status></div>
 		        <div>
-		            <button data-form-save>
+		            <button data-form-save="#form-id">
 		                Save Form Data
 		            </button>
-		            <button data-form-delete>
+		            <button data-form-delete="#form-id">
 		                Delete Form Data
 		            </button>
 		        </div>
@@ -112,7 +112,7 @@
 
 
 	<!-- Javascript -->
-	<script src="js/form-saver.js"></script>
+	<script src="dist/js/form-saver.js"></script>
 	<script>
 		formSaver.init({
 			deleteClear: true,

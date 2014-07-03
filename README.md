@@ -1,7 +1,7 @@
 # Form Saver [![Build Status](https://travis-ci.org/cferdinandi/form-saver.svg)](https://travis-ci.org/cferdinandi/form-saver)
 A handy little script that lets users save and reuse form data.
 
-[Download Form Saver 5](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
+[Download Form Saver](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
 
 **In This Documentation**
 
@@ -88,10 +88,10 @@ Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.githu
 	<div class="form-saver">
 		<div data-form-status></div>
 		<div>
-			<button data-form-save>
+			<button data-form-save="#form-id">
 				Save Form Data
 			</button>
-			<button data-form-delete>
+			<button data-form-delete="#form-id">
 				Delete Form Data
 			</button>
 		</div>
@@ -99,9 +99,18 @@ Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.githu
 </form>
 ```
 
-Create your forms as normal. All form fields must have a name attribute, and checkboxes and radio buttons must also have a `value` attribute, or they won't work properly with Form Saver. Use the `[data-form-no-save]` data attribute to omit a form field from being saved.
+Create your forms as normal. All forms must have an ID, all form fields must have a name attribute, and checkboxes and radio buttons must also have a `value` attribute, or they won't work properly with Form Saver. Use the `[data-form-no-save]` data attribute to omit a form field from being saved.
 
-While a form ID is not required, it is strongly encouraged. Omitting an ID can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.
+You can use `a` elements instead of buttons to save and delete data:
+
+```html
+<a data-form-save="#form-id" href="#">
+	Save Form Data
+</a>
+<a data-form-delete="#form-id" href="#">
+	Delete Form Data
+</a>
+```
 
 ### 3. Initialize Form Saver.
 
@@ -157,48 +166,45 @@ Form Saver lets you override global settings on a form-by-form basis using the `
 ```html
 <button
 	data-form-save
-	data-options="saveMessage: Saved!;
-	              saveClass: 'alert-success'"
+	data-options='{
+					"saveMessage": "Saved!",
+					"saveClass": "alert-success"
+	              }'
 >
 	Save Form Data
 </button>
 
 <button
 	data-form-delete
-	data-options="deleteMessage: Deleted!;
-	              deleteClass: 'alert-success';
-	              deleteClear: true"
+	data-options='{
+					"deleteMessage": "Deleted!",
+					"deleteClass": "alert-success",
+					"deleteClear": true
+	              }'
 >
 	Delete Form Data
 </button>
 ```
 
+**Note:** You must use [valid JSON](http://jsonlint.com/) in order for the `data-options` overrides to work.
+
 ### Use Form Saver events in your own scripts
 
-You can also call Form Saver events in your own scripts:
+You can also call Form Saver events in your own scripts.
+
+#### saveForm()
+Save a form's data.
 
 ```javascript
 formSaver.saveForm(
 	btn, // Node that saves the form. ex. document.querySelector('#save-btn')
-	form, // Form node to save. ex. btn.form
+	formID, // ID of the form to save. ex. #form-id
 	options, // Classes and callbacks. Same options as those passed into the init() function.
 	event // Optional, if a DOM event was triggered.
-);
-
-formSaver.deleteForm = function (
-	btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
-	form, // Form node to delete. ex. btn.form
-	options, // Classes and callbacks. Same options as those passed into the init() function.
-	event // Optional, if a DOM event was triggered.
-);
-
-formSaver.loadForm = function (
-	form, // Form node to delete. ex. document.querySelector('#form')
-	options // Classes and callbacks. Same options as those passed into the init() function.
 );
 ```
 
-**Example 1**
+**Example**
 
 ```javascript
 var form = document.querySelector('#form');
@@ -206,7 +212,19 @@ var options = { saveMessage: 'Your data has been saved. Booya!' };
 formSaver.saveForm( null, form, options );
 ```
 
-**Example 2**
+#### deleteForm()
+Delete a form's data.
+
+```javascript
+formSaver.deleteForm = function (
+	btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
+	formID, // ID of the form to save. ex. #form-id
+	options, // Classes and callbacks. Same options as those passed into the init() function.
+	event // Optional, if a DOM event was triggered.
+);
+```
+
+**Example**
 
 ```javascript
 var btn = document.querySelector('[data-form-delete]');
@@ -214,7 +232,17 @@ var form = btn.form;
 formSaver.deleteForm( btn, form );
 ```
 
-**Example 3**
+#### loadForm()
+Load a form's saved data.
+
+```javascript
+formSaver.loadForm = function (
+	form, // Form node to delete. ex. document.querySelector('#form')
+	options // Classes and callbacks. Same options as those passed into the init() function.
+);
+```
+
+**Example**
 
 ```javascript
 var forms = document.forms;
@@ -222,6 +250,13 @@ for (var i = forms.length; i--;) {
 	var form = forms[i];
 	formSaver.loadForm( form );
 }
+```
+
+#### destroy()
+Destroy the current `formSaver.init()`.
+
+```javascript
+formSaver.destroy();
 ```
 
 
@@ -247,6 +282,11 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v6.0.0 - July 1, 2014
+	* Added `destroy()` method.
+	* Updated unit tests.
+	* Updated `getDataOptions()` method to use JSON.
+	* Fixed link support.
 * v5.2.1 - June 28, 2014
 	* Fixed `extend()` method.
 * v5.2.0 - June 21, 2014

@@ -1,7 +1,7 @@
 # Form Saver [![Build Status](https://travis-ci.org/cferdinandi/form-saver.svg)](https://travis-ci.org/cferdinandi/form-saver)
 A handy little script that lets users save and reuse form data.
 
-[Download Form Saver 5](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
+[Download Form Saver](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
 
 **In This Documentation**
 

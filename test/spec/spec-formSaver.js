@@ -51,12 +51,12 @@ describe('Form Saver', function () {
 				'<div class="form-saver">' +
 					'<div data-form-status></div>' +
 					'<div>' +
-						'<button data-form-save>' +
+						'<a data-form-save="#form-id" href="#">' +
 							'Save Form Data' +
-						'</button>' +
-						'<button data-form-delete data-options=\'{"deleteClear": false}\'>' +
+						'</a>' +
+						'<a data-form-delete="#form-id" data-options=\'{"deleteClear": false}\' href="#">' +
 							'Delete Form Data' +
-						'</button>' +
+						'</a>' +
 					'</div>' +
 				'</div>' +
 			'</form>';
@@ -259,7 +259,7 @@ describe('Form Saver', function () {
 			form = document.forms[0];
 			save = document.querySelector('[data-form-save]');
 			status = document.querySelector('[data-form-status]');
-			formSaver.saveForm(save, form, null, null);
+			formSaver.saveForm(save, '#' + form.id, null, null);
 		});
 
 		it('Should save data to localStorage', function () {
@@ -282,8 +282,8 @@ describe('Form Saver', function () {
 			save = document.querySelector('[data-form-save]');
 			del = document.querySelector('[data-form-delete]');
 			status = document.querySelector('[data-form-status]');
-			formSaver.saveForm(save, form, null, null);
-			formSaver.deleteForm(del, form, null, null);
+			formSaver.saveForm(save, '#' + form.id, null, null);
+			formSaver.deleteForm(del, '#' + form.id, null, null);
 		});
 
 		it('Should delete data from localStorage', function () {
@@ -318,8 +318,8 @@ describe('Form Saver', function () {
 			expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
 			expect(status.innerHTML).toBe('<div>Deleted!</div>');
 			formSaver.destroy();
-			// trigger('click', toggle);
-			// expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
+			trigger('click', save);
+			expect(localStorage.getItem('formSaver-' + form.id)).toBe(null);
 			expect(doc.classList.contains('js-form-saver')).toBe(false);
 		});
 

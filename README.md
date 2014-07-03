@@ -88,10 +88,10 @@ Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.githu
 	<div class="form-saver">
 		<div data-form-status></div>
 		<div>
-			<button data-form-save>
+			<button data-form-save="#form-id">
 				Save Form Data
 			</button>
-			<button data-form-delete>
+			<button data-form-delete="#form-id">
 				Delete Form Data
 			</button>
 		</div>
@@ -99,9 +99,18 @@ Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.githu
 </form>
 ```
 
-Create your forms as normal. All form fields must have a name attribute, and checkboxes and radio buttons must also have a `value` attribute, or they won't work properly with Form Saver. Use the `[data-form-no-save]` data attribute to omit a form field from being saved.
+Create your forms as normal. All forms must have an ID, all form fields must have a name attribute, and checkboxes and radio buttons must also have a `value` attribute, or they won't work properly with Form Saver. Use the `[data-form-no-save]` data attribute to omit a form field from being saved.
 
-While a form ID is not required, it is strongly encouraged. Omitting an ID can create conflicts if more than one form is included on a page, or if the URL changes or includes a query string or hash value.
+You can use `a` elements instead of buttons to save and delete data:
+
+```html
+<a data-form-save="#form-id" href="#">
+	Save Form Data
+</a>
+<a data-form-delete="#form-id" href="#">
+	Delete Form Data
+</a>
+```
 
 ### 3. Initialize Form Saver.
 
@@ -189,7 +198,7 @@ Save a form's data.
 ```javascript
 formSaver.saveForm(
 	btn, // Node that saves the form. ex. document.querySelector('#save-btn')
-	form, // Form node to save. ex. btn.form
+	formID, // ID of the form to save. ex. #form-id
 	options, // Classes and callbacks. Same options as those passed into the init() function.
 	event // Optional, if a DOM event was triggered.
 );
@@ -209,7 +218,7 @@ Delete a form's data.
 ```javascript
 formSaver.deleteForm = function (
 	btn, // Node that deletes the form. ex. document.querySelector('#delete-btn')
-	form, // Form node to delete. ex. btn.form
+	formID, // ID of the form to save. ex. #form-id
 	options, // Classes and callbacks. Same options as those passed into the init() function.
 	event // Optional, if a DOM event was triggered.
 );
@@ -277,6 +286,7 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 	* Added `destroy()` method.
 	* Updated unit tests.
 	* Updated `getDataOptions()` method to use JSON.
+	* Fixed link support.
 * v5.2.1 - June 28, 2014
 	* Fixed `extend()` method.
 * v5.2.0 - June 21, 2014

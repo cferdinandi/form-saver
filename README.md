@@ -24,12 +24,15 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 
 ```html
 <link rel="stylesheet" href="dist/css/form-saver-css.css">
+<script src="dist/js/bind-polyfill.js"></script>
 <script src="dist/js/form-saver.js"></script>
 ```
 
 Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
 
 Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
+
+Form Saver also requires `bind-polyfill.js`, a polyfill that extends ECMAScript 5 API support to more browsers.
 
 ### 2. Add the markup to your HTML.
 
@@ -282,6 +285,9 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+* v6.0.1 - August 8, 2014
+	* Added polyfill for `Functions.prototype.bind`.
+	* Removed Sass paths from `gulpfile.js`.
 * v6.0.0 - July 1, 2014
 	* Added `destroy()` method.
 	* Updated unit tests.

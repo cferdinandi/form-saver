@@ -285,6 +285,8 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 ## Changelog
 
+Form Saver uses [semantic versioning](http://semver.org/).
+
 * v6.0.2 - August 15, 2014
 	* Added fix for UMD structure.
 * v6.0.1 - August 8, 2014

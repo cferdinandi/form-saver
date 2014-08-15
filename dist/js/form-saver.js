@@ -1,5 +1,5 @@
 /**
- * form-saver v6.0.1
+ * form-saver v6.0.2
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -23,7 +23,7 @@
 	// Variables
 	//
 
-	var exports = {}; // Object for public APIs
+	var formSaver = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
 	var eventListeners = { //Listener arrays
 		save: [],
@@ -109,7 +109,7 @@
 	 * @param  {Object} options
 	 * @param  {Event} event
 	 */
-	exports.saveForm = function ( btn, formID, options, event ) {
+	formSaver.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
@@ -185,7 +185,7 @@
 	 * @param  {Object} options
 	 * @param  {Event} event
 	 */
-	exports.deleteForm = function ( btn, formID, options, event ) {
+	formSaver.deleteForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
@@ -231,7 +231,7 @@
 	 * @param  {Element} form The form to get data for
 	 * @param  {Object} options
 	 */
-	exports.loadForm = function ( form, options ) {
+	formSaver.loadForm = function ( form, options ) {
 
 		// Selectors and variables
 		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
@@ -288,7 +288,7 @@
 	 * Destroy the current initialization.
 	 * @public
 	 */
-	exports.destroy = function () {
+	formSaver.destroy = function () {
 		if ( !settings ) return;
 		document.documentElement.classList.remove( settings.initClass );
 		if ( saveBtns ) {
@@ -314,13 +314,13 @@
 	 * @public
 	 * @param {Object} options User settings
 	 */
-	exports.init = function ( options ) {
+	formSaver.init = function ( options ) {
 
 		// feature test
 		if ( !supports ) return;
 
 		// Destroy any existing initializations
-		exports.destroy();
+		formSaver.destroy();
 
 		// Selectors and variables
 		settings = extend( defaults, options || {} ); // Merge user options with defaults
@@ -333,19 +333,19 @@
 
 		// When a save button is clicked, save form data
 		forEach(saveBtns, function (btn, index) {
-			eventListeners.save[index] = exports.saveForm.bind( null, btn, btn.getAttribute('data-form-save'), settings );
+			eventListeners.save[index] = formSaver.saveForm.bind( null, btn, btn.getAttribute('data-form-save'), settings );
 			btn.addEventListener('click', eventListeners.save[index], false);
 		});
 
 		// When a delete button is clicked, delete form data
 		forEach(deleteBtns, function (btn, index) {
-			eventListeners.del[index] = exports.deleteForm.bind( null, btn, btn.getAttribute('data-form-delete'), settings );
+			eventListeners.del[index] = formSaver.deleteForm.bind( null, btn, btn.getAttribute('data-form-delete'), settings );
 			btn.addEventListener('click', eventListeners.del[index], false);
 		});
 
 		// Get saved form data on page load
 		forEach(forms, function (form) {
-			exports.loadForm( form, settings );
+			formSaver.loadForm( form, settings );
 		});
 
 	};
@@ -355,6 +355,6 @@
 	// Public APIs
 	//
 
-	return exports;
+	return formSaver;
 
 });

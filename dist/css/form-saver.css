@@ -1,5 +1,5 @@
 /**
- * form-saver v6.0.2
+ * form-saver v6.1.0
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -9,8 +9,10 @@
 
 .form-saver {
   display: none;
-  visibility: hidden; }
+  visibility: hidden;
+}
 
 .js-form-saver .form-saver {
   display: block;
-  visibility: visible; }
+  visibility: visible;
+}

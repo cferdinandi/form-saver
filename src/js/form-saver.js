@@ -16,11 +16,7 @@
 
 	var formSaver = {}; // Object for public APIs
 	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
-	var eventListeners = { //Listener arrays
-		save: [],
-		del: []
-	};
-	var settings, forms, saveBtns, deleteBtns;
+	var settings, forms;
 
 	// Default settings
 	var defaults = {
@@ -144,11 +140,6 @@
 			status.innerHTML = saveClass === '' ? '<div>' + saveMessage + '</div>' : '<div class="' + saveClass + '">' + saveMessage + '</div>';
 		};
 
-		// If a link or button, prevent default click event
-		if ( btn && (btn.tagName.toLowerCase() === 'a' || btn.tagName.toLowerCase() === 'button' ) && event ) {
-			event.preventDefault();
-		}
-
 		settings.callbackBeforeSave( btn, form ); // Run callbacks before save
 
 		// Add field data to array
@@ -203,11 +194,6 @@
 				});
 			}
 		};
-
-		// If a link or button, prevent default click event
-		if ( btn && (btn.tagName.toLowerCase() === 'a' || btn.tagName.toLowerCase() === 'button' ) && event ) {
-			event.preventDefault();
-		}
 
 		settings.callbackBeforeDelete( btn, form ); // Run callbacks before delete
 		localStorage.removeItem(formSaverID); // Remove form data
@@ -276,28 +262,30 @@
 	};
 
 	/**
+	 * Handle events
+	 * @private
+	 */
+	var eventHandler = function (event) {
+		var toggle = event.target;
+		if ( toggle.hasAttribute('data-form-save') ) {
+			event.preventDefault();
+			formSaver.saveForm( toggle, toggle.getAttribute('data-form-save'), settings );
+		} else if ( toggle.hasAttribute('data-form-delete') ) {
+			event.preventDefault();
+			formSaver.deleteForm( toggle, toggle.getAttribute('data-form-delete'), settings );
+		}
+	};
+
+	/**
 	 * Destroy the current initialization.
 	 * @public
 	 */
 	formSaver.destroy = function () {
 		if ( !settings ) return;
 		document.documentElement.classList.remove( settings.initClass );
-		if ( saveBtns ) {
-			forEach( saveBtns, function ( btn, index ) {
-				btn.removeEventListener( 'click', eventListeners.save[index], false );
-			});
-			eventListeners.save = [];
-		}
-		if ( deleteBtns ) {
-			forEach( deleteBtns, function ( btn, index ) {
-				btn.removeEventListener( 'click', eventListeners.del[index], false );
-			});
-			eventListeners.del = [];
-		}
+		document.removeEventListener('click', eventHandler, false);
 		settings = null;
 		forms = null;
-		saveBtns = null;
-		deleteBtns = null;
 	};
 
 	/**
@@ -316,28 +304,17 @@
 		// Selectors and variables
 		settings = extend( defaults, options || {} ); // Merge user options with defaults
 		forms = document.forms;
-		saveBtns = document.querySelectorAll('[data-form-save]');
-		deleteBtns = document.querySelectorAll('[data-form-delete]');
 
 		// Add class to HTML element to activate conditional CSS
 		document.documentElement.className += (document.documentElement.className ? ' ' : '') + settings.initClass;
-
-		// When a save button is clicked, save form data
-		forEach(saveBtns, function (btn, index) {
-			eventListeners.save[index] = formSaver.saveForm.bind( null, btn, btn.getAttribute('data-form-save'), settings );
-			btn.addEventListener('click', eventListeners.save[index], false);
-		});
-
-		// When a delete button is clicked, delete form data
-		forEach(deleteBtns, function (btn, index) {
-			eventListeners.del[index] = formSaver.deleteForm.bind( null, btn, btn.getAttribute('data-form-delete'), settings );
-			btn.addEventListener('click', eventListeners.del[index], false);
-		});
 
 		// Get saved form data on page load
 		forEach(forms, function (form) {
 			formSaver.loadForm( form, settings );
 		});
+
+		// Listen for click events
+		document.addEventListener('click', eventHandler, false);
 
 	};
 

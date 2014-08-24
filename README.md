@@ -287,6 +287,10 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.0 - August 23, 2014
+	* Switched to Ruby Sass.
+	* Fixed unit test paths.
+	* Switched to event bubbling.
 * v6.0.2 - August 15, 2014
 	* Added fix for UMD structure.
 * v6.0.1 - August 8, 2014

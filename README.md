@@ -7,12 +7,13 @@ A handy little script that lets users save and reuse form data.
 
 1. [Getting Started](#getting-started)
 2. [Installing with Package Managers](#installing-with-package-managers)
-2. [Options & Settings](#options-and-settings)
-3. [Browser Compatibility](#browser-compatibility)
-4. [How to Contribute](#how-to-contribute)
-5. [License](#license)
-6. [Changelog](#changelog)
-7. [Older Docs](#older-docs)
+3. [Working with the Source Files](#working-with-the-source-files)
+4. [Options & Settings](#options-and-settings)
+5. [Browser Compatibility](#browser-compatibility)
+6. [How to Contribute](#how-to-contribute)
+7. [License](#license)
+8. [Changelog](#changelog)
+9. [Older Docs](#older-docs)
 
 
 
@@ -137,6 +138,28 @@ You can install Form Saver with your favorite package manager.
 
 
 
+## Working with the Source Files
+
+If you would prefer, you can work with the development code in the `src` directory using the included [Gulp build system](http://gulpjs.com/). This compiles, lints, and minifies code, and runs unit tests.
+
+### Dependencies
+Make sure these are installed first.
+
+* [Node.js](http://nodejs.org)
+* [Ruby Sass](http://sass-lang.com/install)
+* [Gulp](http://gulpjs.com) `sudo npm install -g gulp`
+* [PhantomJS](http://phantomjs.org)
+
+### Quick Start
+
+1. In bash/terminal/command line, `cd` into your project directory.
+2. Run `npm install` to install required files.
+3. When it's done installing, run `gulp` to get going.
+
+Every time you want to run your tasks, run `gulp`.
+
+
+
 ## Options and Settings
 
 Form Saver includes smart defaults and works right out of the box. But if you want to customize things, it also has a robust API that provides multiple ways for you to adjust the default options and settings.
@@ -256,7 +279,7 @@ for (var i = forms.length; i--;) {
 ```
 
 #### destroy()
-Destroy the current `formSaver.init()`.
+Destroy the current `formSaver.init()`. This is called automatically during the `init` function to remove any existing initializations.
 
 ```javascript
 formSaver.destroy();
@@ -287,6 +310,9 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.2 - October 2, 2014
+	* Fixed CommonJS bug.
+	* Added lazypipe to `gulpfile.js`.
 * v6.1.1 - August 31, 2014
 	* Fixed event listener filter to account for sub elements.
 * v6.1.0 - August 23, 2014

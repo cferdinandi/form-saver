@@ -7,12 +7,10 @@
  * http://gomakethings.com/mit/
  */
 
-.form-saver {
-  display: none;
-  visibility: hidden;
-}
-
-.js-form-saver .form-saver {
-  display: block;
-  visibility: visible;
+{
+"version": 3,
+"mappings": "AAAA,WAAY;EACX,OAAO,EAAE,IAAI;EACb,UAAU,EAAE,MAAM;;;AAGnB,0BAA2B;EAC1B,OAAO,EAAE,KAAK;EACd,UAAU,EAAE,OAAO",
+"sources": ["../components/_form-saver.scss"],
+"names": [],
+"file": "form-saver.css"
 }

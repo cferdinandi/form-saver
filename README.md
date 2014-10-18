@@ -7,12 +7,13 @@ A handy little script that lets users save and reuse form data.
 
 1. [Getting Started](#getting-started)
 2. [Installing with Package Managers](#installing-with-package-managers)
-2. [Options & Settings](#options-and-settings)
-3. [Browser Compatibility](#browser-compatibility)
-4. [How to Contribute](#how-to-contribute)
-5. [License](#license)
-6. [Changelog](#changelog)
-7. [Older Docs](#older-docs)
+3. [Working with the Source Files](#working-with-the-source-files)
+4. [Options & Settings](#options-and-settings)
+5. [Browser Compatibility](#browser-compatibility)
+6. [How to Contribute](#how-to-contribute)
+7. [License](#license)
+8. [Changelog](#changelog)
+9. [Older Docs](#older-docs)
 
 
 
@@ -24,15 +25,12 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 
 ```html
 <link rel="stylesheet" href="dist/css/form-saver-css.css">
-<script src="dist/js/bind-polyfill.js"></script>
 <script src="dist/js/form-saver.js"></script>
 ```
 
 Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
 
 Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
-
-Form Saver also requires `bind-polyfill.js`, a polyfill that extends ECMAScript 5 API support to more browsers.
 
 ### 2. Add the markup to your HTML.
 
@@ -134,6 +132,28 @@ You can install Form Saver with your favorite package manager.
 * **NPM:** `npm install cferdinandi/form-saver`
 * **Bower:** `bower install https://github.com/cferdinandi/form-saver.git`
 * **Component:** `component install cferdinandi/form-saver`
+
+
+
+## Working with the Source Files
+
+If you would prefer, you can work with the development code in the `src` directory using the included [Gulp build system](http://gulpjs.com/). This compiles, lints, and minifies code, and runs unit tests. It's the same build system that's used by [Kraken](http://cferdinandi.github.io/kraken/), so it includes some unnecessary tasks and Sass variables but can be dropped right in to the boilerplate without any configuration.
+
+### Dependencies
+Make sure these are installed first.
+
+* [Node.js](http://nodejs.org)
+* [Ruby Sass](http://sass-lang.com/install)
+* [Gulp](http://gulpjs.com) `sudo npm install -g gulp`
+
+### Quick Start
+
+1. In bash/terminal/command line, `cd` into your project directory.
+2. Run `npm install` to install required files.
+3. When it's done installing, run one of the task runners to get going:
+	* `gulp` manually compiles files.
+	* `gulp watch` automatically compiles files when changes are made.
+	* `gulp reload` automatically compiles files and applies changes using [LiveReload](http://livereload.com/).
 
 
 
@@ -256,7 +276,7 @@ for (var i = forms.length; i--;) {
 ```
 
 #### destroy()
-Destroy the current `formSaver.init()`.
+Destroy the current `formSaver.init()`. This is called automatically during the `init` function to remove any existing initializations.
 
 ```javascript
 formSaver.destroy();
@@ -287,6 +307,12 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.3 - October 18, 2014
+	* Removed `.bind` dependency and polyfill.
+	* Updated `gulpfile.js` tasks and namespacing.
+* v6.1.2 - October 2, 2014
+	* Fixed CommonJS bug.
+	* Added lazypipe to `gulpfile.js`.
 * v6.1.1 - August 31, 2014
 	* Fixed event listener filter to account for sub elements.
 * v6.1.0 - August 23, 2014

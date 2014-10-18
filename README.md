@@ -25,15 +25,12 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 
 ```html
 <link rel="stylesheet" href="dist/css/form-saver-css.css">
-<script src="dist/js/bind-polyfill.js"></script>
 <script src="dist/js/form-saver.js"></script>
 ```
 
 Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
 
 Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
-
-Form Saver also requires `bind-polyfill.js`, a polyfill that extends ECMAScript 5 API support to more browsers.
 
 ### 2. Add the markup to your HTML.
 
@@ -140,7 +137,7 @@ You can install Form Saver with your favorite package manager.
 
 ## Working with the Source Files
 
-If you would prefer, you can work with the development code in the `src` directory using the included [Gulp build system](http://gulpjs.com/). This compiles, lints, and minifies code, and runs unit tests.
+If you would prefer, you can work with the development code in the `src` directory using the included [Gulp build system](http://gulpjs.com/). This compiles, lints, and minifies code, and runs unit tests. It's the same build system that's used by [Kraken](http://cferdinandi.github.io/kraken/), so it includes some unnecessary tasks and Sass variables but can be dropped right in to the boilerplate without any configuration.
 
 ### Dependencies
 Make sure these are installed first.
@@ -148,15 +145,15 @@ Make sure these are installed first.
 * [Node.js](http://nodejs.org)
 * [Ruby Sass](http://sass-lang.com/install)
 * [Gulp](http://gulpjs.com) `sudo npm install -g gulp`
-* [PhantomJS](http://phantomjs.org)
 
 ### Quick Start
 
 1. In bash/terminal/command line, `cd` into your project directory.
 2. Run `npm install` to install required files.
-3. When it's done installing, run `gulp` to get going.
-
-Every time you want to run your tasks, run `gulp`.
+3. When it's done installing, run one of the task runners to get going:
+	* `gulp` manually compiles files.
+	* `gulp watch` automatically compiles files when changes are made.
+	* `gulp reload` automatically compiles files and applies changes using [LiveReload](http://livereload.com/).
 
 
 
@@ -310,6 +307,9 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.3 - October 18, 2014
+	* Removed `.bind` dependency and polyfill.
+	* Updated `gulpfile.js` tasks and namespacing.
 * v6.1.2 - October 2, 2014
 	* Fixed CommonJS bug.
 	* Added lazypipe to `gulpfile.js`.

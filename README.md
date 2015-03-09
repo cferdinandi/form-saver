@@ -307,6 +307,8 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.4 - March 7, 2015
+	* Fixed AMD wrapper.
 * v6.1.3 - October 18, 2014
 	* Removed `.bind` dependency and polyfill.
 	* Updated `gulpfile.js` tasks and namespacing.

@@ -9,13 +9,13 @@
 
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
-		define('formSaver', factory(root));
+		define([], factory);
 	} else if ( typeof exports === 'object' ) {
-		module.exports = factory(root);
+		module.exports = factory;
 	} else {
 		root.formSaver = factory(root);
 	}
-})(this, function (root) {
+})(this, function (window) {
 
 	'use strict';
 
@@ -24,7 +24,7 @@
 	//
 
 	var formSaver = {}; // Object for public APIs
-	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
+	var supports = !!document.querySelector && !!window.addEventListener && !!window.localStorage; // Feature test
 	var settings, forms;
 
 	// Default settings

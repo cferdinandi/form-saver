@@ -1,5 +1,5 @@
 /**
- * form-saver v6.1.4
+ * form-saver v6.1.5
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 
@@ -9,13 +9,13 @@
 
 (function (root, factory) {
 	if ( typeof define === 'function' && define.amd ) {
-		define([], factory);
+		define([], factory(root));
 	} else if ( typeof exports === 'object' ) {
-		module.exports = factory;
+		module.exports = factory(root);
 	} else {
 		root.formSaver = factory(root);
 	}
-})(this, function (window) {
+})(this, function (root) {
 
 	'use strict';
 
@@ -24,7 +24,7 @@
 	//
 
 	var formSaver = {}; // Object for public APIs
-	var supports = !!document.querySelector && !!window.addEventListener && !!window.localStorage; // Feature test
+	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
 	var settings, forms;
 
 	// Default settings

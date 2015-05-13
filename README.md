@@ -307,6 +307,8 @@ Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
 
 Form Saver uses [semantic versioning](http://semver.org/).
 
+* v6.1.6 - May 13, 2015
+	* Fixed Browserify `window` bug.
 * v6.1.5 - March 9, 2015
 	* REALLY fixed UMD wrapper.
 * v6.1.4 - March 7, 2015

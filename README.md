@@ -12,8 +12,7 @@ A handy little script that lets users save and reuse form data.
 5. [Browser Compatibility](#browser-compatibility)
 6. [How to Contribute](#how-to-contribute)
 7. [License](#license)
-8. [Changelog](#changelog)
-9. [Older Docs](#older-docs)
+8. [Older Docs](#older-docs)
 
 
 
@@ -300,91 +299,6 @@ In lieu of a formal style guide, take care to maintain the existing coding style
 
 ## License
 Form Saver is licensed under the [MIT License](http://gomakethings.com/mit/).
-
-
-
-## Changelog
-
-Form Saver uses [semantic versioning](http://semver.org/).
-
-* v6.1.6 - May 13, 2015
-	* Fixed Browserify `window` bug.
-* v6.1.5 - March 9, 2015
-	* REALLY fixed UMD wrapper.
-* v6.1.4 - March 7, 2015
-	* Fixed AMD wrapper.
-* v6.1.3 - October 18, 2014
-	* Removed `.bind` dependency and polyfill.
-	* Updated `gulpfile.js` tasks and namespacing.
-* v6.1.2 - October 2, 2014
-	* Fixed CommonJS bug.
-	* Added lazypipe to `gulpfile.js`.
-* v6.1.1 - August 31, 2014
-	* Fixed event listener filter to account for sub elements.
-* v6.1.0 - August 23, 2014
-	* Switched to Ruby Sass.
-	* Fixed unit test paths.
-	* Switched to event bubbling.
-* v6.0.2 - August 15, 2014
-	* Added fix for UMD structure.
-* v6.0.1 - August 8, 2014
-	* Added polyfill for `Functions.prototype.bind`.
-	* Removed Sass paths from `gulpfile.js`.
-* v6.0.0 - July 1, 2014
-	* Added `destroy()` method.
-	* Updated unit tests.
-	* Updated `getDataOptions()` method to use JSON.
-	* Fixed link support.
-* v5.2.1 - June 28, 2014
-	* Fixed `extend()` method.
-* v5.2.0 - June 21, 2014
-	* Converted to gulp.js workflow.
-	* Added unit testing.
-	* Updated naming conventions.
-	* Removed unused `_config.scss` and `_mixins.scss` files.
-	* Added minified versions of files.
-* v5.1.2 - June 19, 2014
-	* Fixed factory/root/UMD definition.
-* v5.1.1 - June 9, 2014
-	* Converted to UMD module.
-	* Moved public APIs to exports variable.
-	* Improved feature test.
-	* Replaced `Array.prototype.forEach` hack with proper `forEach` function.
-	* Added a more well supported `trim` function.
-	* General code optimizations for better minification and performance.
-	* Updated to JSDoc documentation (sort of).
-	* Updated to three number versioning system.
-	* Added package manager installation info.
-* v5.0 - April 4, 2014
-	* Removed unneccessary Buoy dependancy.
-* v4.2 - March 19, 2014
-	* Passed arguments into callback functions.
-* v4.1 - February 27, 2014
-	* Converted `_defaults` to a literal object
-* v4.0 - February 24, 2014
-	* Better public/private method namespacing.
-	* Require `init()` call to run.
-	* New API exposes additional methods for use in your own scripts.
-	* Better documentation.
-* v3.2 - February 4, 2014
-	* Reverted to `Array.prototype.foreach` loops.
-* v3.1 - January 27, 2014
-	* Updated `addEventListener` to be more object oriented.
-	* Moved feature test to script itself.
-* v3.0 - January 27, 2014
-	* Switched to a data attribute for the toggle selector (separates scripts from styles).
-	* Removed unneeded `.save-form-data` and `.delete-form-data` classes.
-	* Replace `.hide-no-js` with `.form-saver` wrapper class.
-	* Prefixed script with a `;` to prevent errors if other scripts are incorrectly closed.
-	* Added namespacing to IIFE.
-* v2.2 - December 6, 2013
-	* Added Sass support.
-* v2.1 - November 21, 2013
-	* Added `Array.prototype.forEach` support to feature test.
-* v2.0 - November 20, 2013
-	* Converted to namespaced, array-based storage for each form. This allows different forms to use identical names for fields without generating conflicts.
-* v1.0 - November 18, 2013
-	* Initial release.
 
 
 

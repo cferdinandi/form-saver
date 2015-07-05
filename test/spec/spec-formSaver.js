@@ -148,8 +148,7 @@ describe('Form Saver', function () {
 				saveClass: 'save',
 				deleteClass: 'delete',
 				initClass: 'js-test',
-				callbackBeforeSave: function () { document.documentElement.classList.add('callback-before'); },
-				callbackAfterSave: function () { document.documentElement.classList.add('callback-after'); }
+				callbackSave: function () { document.documentElement.classList.add('callback'); }
 			});
 			form = document.forms[0];
 			save = document.querySelector('[data-form-save]');
@@ -162,8 +161,7 @@ describe('Form Saver', function () {
 			trigger('click', save);
 			expect(status.innerHTML).toBe('<div class="save">Woohoo!</div>');
 			expect(doc.classList.contains('js-test')).toBe(true);
-			expect(doc.classList.contains('callback-before')).toBe(true);
-			expect(doc.classList.contains('callback-after')).toBe(true);
+			expect(doc.classList.contains('callback')).toBe(true);
 			trigger('click', del);
 			expect(status.innerHTML).toBe('<div class="delete">Boohoo!</div>');
 		});

@@ -26,57 +26,15 @@
 		saveClass: '',
 		deleteClass: '',
 		initClass: 'js-form-saver',
-		callbackBeforeSave: function () {},
-		callbackAfterSave: function () {},
-		callbackBeforeDelete: function () {},
-		callbackAfterDelete: function () {},
-		callbackBeforeLoad: function () {},
-		callbackAfterLoad: function () {}
+		callbackSave: function () {},
+		callbackDelete: function () {},
+		callbackLoad: function () {}
 	};
 
 
 	//
 	// Methods
 	//
-
-	/**
-	 * A simple forEach() implementation for Arrays, Objects and NodeLists
-	 * @private
-	 * @param {Array|Object|NodeList} collection Collection of items to iterate
-	 * @param {Function} callback Callback function for each iteration
-	 * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
-	 */
-	var forEach = function (collection, callback, scope) {
-		if (Object.prototype.toString.call(collection) === '[object Object]') {
-			for (var prop in collection) {
-				if (Object.prototype.hasOwnProperty.call(collection, prop)) {
-					callback.call(scope, collection[prop], prop, collection);
-				}
-			}
-		} else {
-			for (var i = 0, len = collection.length; i < len; i++) {
-				callback.call(scope, collection[i], i, collection);
-			}
-		}
-	};
-
-	/**
-	 * Merge defaults with user options
-	 * @private
-	 * @param {Object} defaults Default settings
-	 * @param {Object} options User options
-	 * @returns {Object} Merged values of defaults and options
-	 */
-	var extend = function ( defaults, options ) {
-		var extended = {};
-		forEach(defaults, function (value, prop) {
-			extended[prop] = defaults[prop];
-		});
-		forEach(options, function (value, prop) {
-			extended[prop] = options[prop];
-		});
-		return extended;
-	};
 
 	/**
 	 * Convert data-options attribute into an object of key/value pairs
@@ -86,32 +44,6 @@
 	 */
 	var getDataOptions = function ( options ) {
 		return !options || !(typeof JSON === 'object' && typeof JSON.parse === 'function') ? {} : JSON.parse( options );
-	};
-
-	/**
-	 * Get the closest matching element up the DOM tree
-	 * @param {Element} elem Starting element
-	 * @param {String} selector Selector to match against (class, ID, or data attribute)
-	 * @return {Boolean|Element} Returns false if not match found
-	 */
-	var getClosest = function (elem, selector) {
-		var firstChar = selector.charAt(0);
-		for ( ; elem && elem !== document; elem = elem.parentNode ) {
-			if ( firstChar === '.' ) {
-				if ( elem.classList.contains( selector.substr(1) ) ) {
-					return elem;
-				}
-			} else if ( firstChar === '#' ) {
-				if ( elem.id === selector.substr(1) ) {
-					return elem;
-				}
-			} else if ( firstChar === '[' ) {
-				if ( elem.hasAttribute( selector.substr(1, selector.length - 2) ) ) {
-					return elem;
-				}
-			}
-		}
-		return false;
 	};
 
 	/**
@@ -125,9 +57,8 @@
 	formSaver.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
-		settings = extend( settings, overrides ); // Merge overrides with settings
+		var settings = buoy.extend( settings || defaults, options || {}, overrides || {} );  // Merge user options with defaults
 
 		// Selectors and variables
 		var form = document.querySelector(formID);
@@ -166,22 +97,20 @@
 			status.innerHTML = saveClass === '' ? '<div>' + saveMessage + '</div>' : '<div class="' + saveClass + '">' + saveMessage + '</div>';
 		};
 
-		settings.callbackBeforeSave( btn, form ); // Run callbacks before save
-
 		// Add field data to array
-		forEach(formFields, function (field) {
+		buoy.forEach(formFields, function (field) {
 			prepareField(field);
 		});
 
 		// Display save success message
-		forEach(formStatus, function (status) {
+		buoy.forEach(formStatus, function (status) {
 			displayStatus( status, settings.saveMessage, settings.saveClass );
 		});
 
 		// Save form data in localStorage
 		localStorage.setItem( formSaverID, JSON.stringify(formSaverData) );
 
-		settings.callbackAfterSave( btn, form ); // Run callbacks after save
+		settings.callbackSave( btn, form ); // Run callbacks after save
 
 	};
 
@@ -196,9 +125,8 @@
 	formSaver.deleteForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
-		settings = extend( settings, overrides ); // Merge overrides with settings
+		var settings = buoy.extend( settings || defaults, options || {}, overrides || {} );  // Merge user options with defaults
 
 		// Selectors and variables
 		var form = document.querySelector(formID);
@@ -215,16 +143,15 @@
 				sessionStorage.setItem(formSaverID + '-formSaverMessage', formMessage);
 				location.reload(false);
 			} else {
-				forEach(formStatus, function (status) {
+				buoy.forEach(formStatus, function (status) {
 					status.innerHTML = formMessage;
 				});
 			}
 		};
 
-		settings.callbackBeforeDelete( btn, form ); // Run callbacks before delete
 		localStorage.removeItem(formSaverID); // Remove form data
 		displayStatus(); // Display delete success message
-		settings.callbackAfterDelete( btn, form ); // Run callbacks after delete
+		settings.callbackDelete( btn, form ); // Run callbacks after delete
 
 	};
 
@@ -237,7 +164,7 @@
 	formSaver.loadForm = function ( form, options ) {
 
 		// Selectors and variables
-		var settings = extend( settings || defaults, options || {} );  // Merge user options with defaults
+		var settings = buoy.extend( settings || defaults, options || {} );  // Merge user options with defaults
 		var formSaverID = 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
@@ -271,19 +198,17 @@
 			sessionStorage.removeItem(formSaverID + '-formSaverMessage');
 		};
 
-		settings.callbackBeforeLoad( form ); // Run callbacks before load
-
 		// Populate form with data from localStorage
-		forEach(formFields, function (field) {
+		buoy.forEach(formFields, function (field) {
 			populateField(field);
 		});
 
 		// If page was reloaded and delete success message exists, display it
-		forEach(formStatus, function (status) {
+		buoy.forEach(formStatus, function (status) {
 			displayStatus(status);
 		});
 
-		settings.callbackAfterLoad( form ); // Run callbacks after load
+		settings.callbackLoad( form ); // Run callbacks after load
 
 	};
 
@@ -293,8 +218,8 @@
 	 */
 	var eventHandler = function (event) {
 		var toggle = event.target;
-		var save = getClosest(toggle, '[data-form-save]');
-		var del = getClosest(toggle, '[data-form-delete]');
+		var save = buoy.getClosest(toggle, '[data-form-save]');
+		var del = buoy.getClosest(toggle, '[data-form-delete]');
 		if ( save ) {
 			event.preventDefault();
 			formSaver.saveForm( save, save.getAttribute('data-form-save'), settings );
@@ -330,14 +255,14 @@
 		formSaver.destroy();
 
 		// Selectors and variables
-		settings = extend( defaults, options || {} ); // Merge user options with defaults
+		settings = buoy.extend( defaults, options || {} ); // Merge user options with defaults
 		forms = document.forms;
 
 		// Add class to HTML element to activate conditional CSS
 		document.documentElement.className += (document.documentElement.className ? ' ' : '') + settings.initClass;
 
 		// Get saved form data on page load
-		forEach(forms, function (form) {
+		buoy.forEach(forms, function (form) {
 			formSaver.loadForm( form, settings );
 		});
 

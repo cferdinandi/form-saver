@@ -22,13 +22,12 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 ### 1. Include Form Saver on your site.
 
 ```html
-<link rel="stylesheet" href="dist/css/form-saver-css.css">
+<link rel="stylesheet" href="dist/css/form-saver.css">
+<script src="dist/js/buoy.js"></script>
 <script src="dist/js/form-saver.js"></script>
 ```
 
-Form Saver is [built with Sass](http://sass-lang.com/) for easy customization. If you don't use Sass, that's ok. The `css` folder contains compiled vanilla CSS.
-
-Form Saver uses the same coding conventions as [Kraken](http://cferdinandi.github.io/kraken/), so you can drop the `_form-saver.css` file right into Kraken without making any updates. Or, adjust the variables to suit your own project.
+Form Saver requires [Buoy](https://github.com/cferdinandi/buoy), a lightweight collection of helper methods for getting stuff done with native JavaScript.
 
 ### 2. Add the markup to your HTML.
 
@@ -141,7 +140,6 @@ If you would prefer, you can work with the development code in the `src` directo
 Make sure these are installed first.
 
 * [Node.js](http://nodejs.org)
-* [Ruby Sass](http://sass-lang.com/install)
 * [Gulp](http://gulpjs.com) `sudo npm install -g gulp`
 
 ### Quick Start
@@ -150,8 +148,7 @@ Make sure these are installed first.
 2. Run `npm install` to install required files.
 3. When it's done installing, run one of the task runners to get going:
 	* `gulp` manually compiles files.
-	* `gulp watch` automatically compiles files when changes are made.
-	* `gulp reload` automatically compiles files and applies changes using [LiveReload](http://livereload.com/).
+	* `gulp watch` automatically compiles files when changes are made and applies changes using [LiveReload](http://livereload.com/).
 
 
 
@@ -171,12 +168,9 @@ formSaver.init({
 	saveClass: '', // Class to add to save success message <div>
 	deleteClass: '', // Class to add to delete success message <div>
 	initClass: 'js-form-saver', // Class added to `<html>` element when initiated
-	callbackBeforeSave: function ( btn, form ) {}, // Function to run before a form is saved
-	callbackAfterSave: function ( btn, form ) {}, // Function to run after a form is saved
-	callbackBeforeDelete: function ( btn, form ) {}, // Function to run before a form is deleted
-	callbackAfterDelete: function ( btn, form ) {}, // Function to run after a form is deleted
-	callbackBeforeLoad: function ( form ) {}, // Function to run before form data is loaded from storage
-	callbackAfterLoad: function ( form ) {} // Function to run after form data is loaded from storage
+	callbackSave: function ( btn, form ) {}, // Function to run after a form is saved
+	callbackDelete: function ( btn, form ) {}, // Function to run after a form is deleted
+	callbackLoad: function ( form ) {} // Function to run after form data is loaded from storage
 });
 ```
 

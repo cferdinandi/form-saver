@@ -89,6 +89,7 @@
 		</main>
 
 		<!-- Javascript -->
+		<script src="dist/js/buoy.js"></script>
 		<script src="dist/js/form-saver.js"></script>
 		<script>
 			formSaver.init({
@@ -98,12 +99,9 @@
 				saveClass: '',
 				deleteClass: '',
 				initClass: 'js-form-saver',
-				callbackBeforeSave: function () {},
-				callbackAfterSave: function () {},
-				callbackBeforeDelete: function () {},
-				callbackAfterDelete: function () {},
-				callbackBeforeLoad: function () {},
-				callbackAfterLoad: function () {}
+				callbackSave: function () {},
+				callbackDelete: function () {},
+				callbackLoad: function () {}
 			});
 		</script>
 

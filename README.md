@@ -171,12 +171,9 @@ formSaver.init({
 	saveClass: '', // Class to add to save success message <div>
 	deleteClass: '', // Class to add to delete success message <div>
 	initClass: 'js-form-saver', // Class added to `<html>` element when initiated
-	callbackBeforeSave: function ( btn, form ) {}, // Function to run before a form is saved
-	callbackAfterSave: function ( btn, form ) {}, // Function to run after a form is saved
-	callbackBeforeDelete: function ( btn, form ) {}, // Function to run before a form is deleted
-	callbackAfterDelete: function ( btn, form ) {}, // Function to run after a form is deleted
-	callbackBeforeLoad: function ( form ) {}, // Function to run before form data is loaded from storage
-	callbackAfterLoad: function ( form ) {} // Function to run after form data is loaded from storage
+	callbackSave: function ( btn, form ) {}, // Function to run after a form is saved
+	callbackDelete: function ( btn, form ) {}, // Function to run after a form is deleted
+	callbackLoad: function ( form ) {} // Function to run after form data is loaded from storage
 });
 ```
 

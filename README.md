@@ -23,11 +23,8 @@ Compiled and production-ready code can be found in the `dist` directory. The `sr
 
 ```html
 <link rel="stylesheet" href="dist/css/form-saver.css">
-<script src="dist/js/buoy.js"></script>
 <script src="dist/js/form-saver.js"></script>
 ```
-
-Form Saver requires [Buoy](https://github.com/cferdinandi/buoy), a lightweight collection of helper methods for getting stuff done with native JavaScript.
 
 ### 2. Add the markup to your HTML.
 

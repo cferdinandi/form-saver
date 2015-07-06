@@ -1,5 +1,5 @@
 /**
- * form-saver v7.0.0
+ * form-saver v8.0.0
  * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
  * http://github.com/cferdinandi/form-saver
  * 

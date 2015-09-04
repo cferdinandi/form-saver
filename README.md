@@ -3,16 +3,6 @@ A handy little script that lets users save and reuse form data.
 
 [Download Form Saver](https://github.com/cferdinandi/form-saver/archive/master.zip) / [View the demo](http://cferdinandi.github.io/form-saver/)
 
-**In This Documentation**
-
-1. [Getting Started](#getting-started)
-2. [Installing with Package Managers](#installing-with-package-managers)
-3. [Working with the Source Files](#working-with-the-source-files)
-4. [Options & Settings](#options-and-settings)
-5. [Browser Compatibility](#browser-compatibility)
-6. [How to Contribute](#how-to-contribute)
-7. [License](#license)
-
 
 
 ## Getting Started
@@ -146,6 +136,7 @@ Make sure these are installed first.
 3. When it's done installing, run one of the task runners to get going:
 	* `gulp` manually compiles files.
 	* `gulp watch` automatically compiles files when changes are made and applies changes using [LiveReload](http://livereload.com/).
+	* `gulp test` compiles files and runs unit tests.
 
 
 
@@ -159,6 +150,10 @@ You can pass options and callbacks into Form Saver through the `init()` function
 
 ```javascript
 formSaver.init({
+	selectorStatus: '[data-form-status]', // Selector for the status container (must be a valid CSS selector)
+	selectorSave: '[data-form-save]', // Selector for the save button (must be a valid CSS selector)
+	selectorDelete: '[data-form-delete]', // Selector for the delete button (must be a valid CSS selector)
+	selectorIgnore: '[data-form-no-save]', // Selector for fields to ignore (must be a valid CSS selector)
 	deleteClear: true, // Boolean. Reload the page after deleting form data.
 	saveMessage: 'Saved!', // Message to display when form data is successfully saved.
 	deleteMessage: 'Deleted!', // Message to display when form data is successfully deleted.
@@ -170,6 +165,8 @@ formSaver.init({
 	callbackLoad: function ( form ) {} // Function to run after form data is loaded from storage
 });
 ```
+
+***Note:*** *If you change the `selectorSave` or `selectorDelete`, you still need to include the `[data-form-save]` and `[data-form-delete]` attributes in order to pass in the selector for the form.*
 
 ### Override settings with data attributes
 
@@ -275,7 +272,7 @@ formSaver.destroy();
 
 ## Browser Compatibility
 
-Form Saver works in all modern browsers, and IE 9 and above.
+Form Saver works in all modern browsers, and IE 10 and above. You can extend browser support back to IE 9 with the [classList.js polyfill](https://github.com/eligrey/classList.js/).
 
 Form Saver is built with modern JavaScript APIs, and uses progressive enhancement. If the JavaScript file fails to load, or if your site is viewed on older and less capable browsers, save and delete data buttons will not be displayed.
 

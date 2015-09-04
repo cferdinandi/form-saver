@@ -1,2 +1,7 @@
-/** form-saver v8.0.0, by Chris Ferdinandi | http://github.com/cferdinandi/form-saver | Licensed under MIT: http://gomakethings.com/mit/ */
-.form-saver{display:none;visibility:hidden}.js-form-saver .form-saver{display:block;visibility:visible}
+/*! form-saver v8.1.0 | (c) 2015 Chris Ferdinandi | MIT License | http://github.com/cferdinandi/form-saver */
+/*!
+ * form-saver v8.1.0: Save and reuse form data
+ * (c) 2015 Chris Ferdinandi
+ * MIT License
+ * http://github.com/cferdinandi/form-saver
+ */.form-saver{display:none;visibility:hidden}.js-form-saver .form-saver{display:block;visibility:visible}

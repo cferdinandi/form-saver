@@ -1,10 +1,8 @@
-/**
- * form-saver v8.0.0
- * A simple script that lets users save and reuse form data, by Chris Ferdinandi.
+/*!
+ * form-saver v8.1.0: Save and reuse form data
+ * (c) 2015 Chris Ferdinandi
+ * MIT License
  * http://github.com/cferdinandi/form-saver
- * 
- * Free to use under the MIT License.
- * http://gomakethings.com/mit/
  */
 
 (function (root, factory) {
@@ -24,11 +22,15 @@
 	//
 
 	var formSaver = {}; // Object for public APIs
-	var supports = !!document.querySelector && !!root.addEventListener && !!root.localStorage; // Feature test
+	var supports = 'querySelector' in document && 'addEventListener' in root && 'localStorage' in root && 'classList' in document.createElement('_'); // Feature test
 	var settings, forms;
 
 	// Default settings
 	var defaults = {
+		selectorStatus: '[data-form-status]',
+		selectorSave: '[data-form-save]',
+		selectorDelete: '[data-form-delete]',
+		selectorIgnore: '[data-form-no-save]',
 		deleteClear: true,
 		saveMessage: 'Saved!',
 		deleteMessage: 'Deleted!',
@@ -124,7 +126,6 @@
 
 		// Variables
 		var firstChar = selector.charAt(0);
-		var supports = 'classList' in document.documentElement;
 		var attribute, value;
 
 		// If selector is a data attribute, split attribute from value
@@ -143,14 +144,8 @@
 
 			// If selector is a class
 			if ( firstChar === '.' ) {
-				if ( supports ) {
-					if ( elem.classList.contains( selector.substr(1) ) ) {
-						return elem;
-					}
-				} else {
-					if ( new RegExp('(^|\\s)' + selector.substr(1) + '(\\s|$)').test( elem.className ) ) {
-						return elem;
-					}
+				if ( elem.classList.contains( selector.substr(1) ) ) {
+					return elem;
 				}
 			}
 
@@ -206,15 +201,15 @@
 	formSaver.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
-		var settings = extend( settings || defaults, options || {}, overrides || {} );  // Merge user options with defaults
+		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : {} );
+		var settings = extend( settings || defaults, options || {}, overrides );  // Merge user options with defaults
 
 		// Selectors and variables
 		var form = document.querySelector(formID);
 		var formSaverID = 'formSaver-' + form.id;
 		var formSaverData = {};
 		var formFields = form.elements;
-		var formStatus = form.querySelectorAll('[data-form-status]');
+		var formStatus = form.querySelectorAll( settings.selectorStatus );
 
 		/**
 		 * Convert field data into an array
@@ -222,7 +217,7 @@
 		 * @param  {Element} field Form field to convert
 		 */
 		var prepareField = function (field) {
-			if ( !field.hasAttribute('data-form-no-save') ) {
+			if ( !getClosest( field, settings.selectorIgnore ) ) {
 				if ( field.type.toLowerCase() === 'radio' || field.type.toLowerCase() === 'checkbox' ) {
 					if ( field.checked === true ) {
 						formSaverData[field.name + field.value] = 'on';
@@ -274,13 +269,13 @@
 	formSaver.deleteForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var overrides = getDataOptions( btn ? btn.getAttribute('data-options') : null );
-		var settings = extend( settings || defaults, options || {}, overrides || {} );  // Merge user options with defaults
+		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : {} );
+		var settings = extend( settings || defaults, options || {}, overrides );  // Merge user options with defaults
 
 		// Selectors and variables
 		var form = document.querySelector(formID);
 		var formSaverID = 'formSaver-' + form.id;
-		var formStatus = form.querySelectorAll('[data-form-status]');
+		var formStatus = form.querySelectorAll( settings.selectorStatus );
 		var formMessage = settings.deleteClass === '' ? '<div>' + settings.deleteMessage + '</div>' : '<div class="' + settings.deleteClass + '">' + settings.deleteMessage + '</div>';
 
 		/**
@@ -317,7 +312,7 @@
 		var formSaverID = 'formSaver-' + form.id;
 		var formSaverData = JSON.parse( localStorage.getItem(formSaverID) );
 		var formFields = form.elements;
-		var formStatus = form.querySelectorAll('[data-form-status]');
+		var formStatus = form.querySelectorAll( settings.selectorStatus );
 
 		/**
 		 * Populate a field with localStorage data
@@ -367,14 +362,14 @@
 	 */
 	var eventHandler = function (event) {
 		var toggle = event.target;
-		var save = getClosest(toggle, '[data-form-save]');
-		var del = getClosest(toggle, '[data-form-delete]');
+		var save = getClosest( toggle, settings.selectorSave );
+		var del = getClosest( toggle, settings.selectorDelete );
 		if ( save ) {
 			event.preventDefault();
-			formSaver.saveForm( save, save.getAttribute('data-form-save'), settings );
+			formSaver.saveForm( save, save.getAttribute( 'data-form-save' ), settings );
 		} else if ( del ) {
 			event.preventDefault();
-			formSaver.deleteForm( del, del.getAttribute('data-form-delete'), settings );
+			formSaver.deleteForm( del, del.getAttribute( 'data-form-delete' ), settings );
 		}
 	};
 

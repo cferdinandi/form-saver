@@ -1,6 +1,6 @@
 /*!
- * form-saver v8.1.0: Save and reuse form data
- * (c) 2015 Chris Ferdinandi
+ * form-saver v8.1.1: Save and reuse form data
+ * (c) 2016 Chris Ferdinandi
  * MIT License
  * http://github.com/cferdinandi/form-saver
  */
@@ -201,7 +201,7 @@
 	formSaver.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : {} );
+		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : null );
 		var settings = extend( settings || defaults, options || {}, overrides );  // Merge user options with defaults
 
 		// Selectors and variables

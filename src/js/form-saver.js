@@ -194,7 +194,7 @@
 	formSaver.saveForm = function ( btn, formID, options, event ) {
 
 		// Defaults and settings
-		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : {} );
+		var overrides = getDataOptions( btn ? btn.getAttribute( 'data-options' ) : null );
 		var settings = extend( settings || defaults, options || {}, overrides );  // Merge user options with defaults
 
 		// Selectors and variables

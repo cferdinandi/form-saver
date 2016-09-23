@@ -1,5 +1,5 @@
 /*!
- * form-saver v8.1.1: Save and reuse form data
+ * form-saver v8.2.0: Save and reuse form data
  * (c) 2016 Chris Ferdinandi
  * MIT License
  * http://github.com/cferdinandi/form-saver
@@ -13,7 +13,7 @@
 	} else {
 		root.formSaver = factory(root);
 	}
-})(typeof global !== 'undefined' ? global : this.window || this.global, function (root) {
+})(typeof global !== 'undefined' ? global : this.window || this.global, (function (root) {
 
 	'use strict';
 
@@ -242,14 +242,14 @@
 		};
 
 		// Add field data to array
-		forEach(formFields, function (field) {
+		forEach(formFields, (function (field) {
 			prepareField(field);
-		});
+		}));
 
 		// Display save success message
-		forEach(formStatus, function (status) {
+		forEach(formStatus, (function (status) {
 			displayStatus( status, settings.saveMessage, settings.saveClass );
-		});
+		}));
 
 		// Save form data in localStorage
 		localStorage.setItem( formSaverID, JSON.stringify(formSaverData) );
@@ -287,9 +287,9 @@
 				sessionStorage.setItem(formSaverID + '-formSaverMessage', formMessage);
 				location.reload(false);
 			} else {
-				forEach(formStatus, function (status) {
+				forEach(formStatus, (function (status) {
 					status.innerHTML = formMessage;
-				});
+				}));
 			}
 		};
 
@@ -343,14 +343,14 @@
 		};
 
 		// Populate form with data from localStorage
-		forEach(formFields, function (field) {
+		forEach(formFields, (function (field) {
 			populateField(field);
-		});
+		}));
 
 		// If page was reloaded and delete success message exists, display it
-		forEach(formStatus, function (status) {
+		forEach(formStatus, (function (status) {
 			displayStatus(status);
-		});
+		}));
 
 		settings.callbackLoad( form ); // Run callbacks after load
 
@@ -406,9 +406,9 @@
 		document.documentElement.className += (document.documentElement.className ? ' ' : '') + settings.initClass;
 
 		// Get saved form data on page load
-		forEach(forms, function (form) {
+		forEach(forms, (function (form) {
 			formSaver.loadForm( form, settings );
-		});
+		}));
 
 		// Listen for click events
 		document.addEventListener('click', eventHandler, false);
@@ -422,4 +422,4 @@
 
 	return formSaver;
 
-});
+}));

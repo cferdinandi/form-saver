@@ -215,9 +215,8 @@ formSaver.saveForm(
 **Example**
 
 ```javascript
-var form = document.querySelector('#form');
 var options = { saveMessage: 'Your data has been saved. Booya!' };
-formSaver.saveForm( null, form, options );
+formSaver.saveForm( null, '#form', options );
 ```
 
 #### deleteForm()
@@ -236,8 +235,8 @@ formSaver.deleteForm = function (
 
 ```javascript
 var btn = document.querySelector('[data-form-delete]');
-var form = btn.form;
-formSaver.deleteForm( btn, form );
+var formID = btn.form.id;
+formSaver.deleteForm( btn, formID );
 ```
 
 #### loadForm()

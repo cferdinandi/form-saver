@@ -287,6 +287,11 @@
 					if ( formSaverData[field.name + field.value] === 'on' ) {
 						field.checked = true;
 					}
+				} else if (field.type.toLowerCase() === 'select-one') {
+					if (field.value && field.value !== '') {
+						field.value = formSaverData[field.name];
+						field.dispatchEvent(new Event("change"));
+					}
 				} else if ( field.type.toLowerCase() !== 'hidden' && field.type.toLowerCase() !== 'submit' ) {
 					if ( formSaverData[field.name] ) {
 						field.value = formSaverData[field.name];
